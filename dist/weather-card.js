@@ -271,7 +271,7 @@ class WeatherCard extends LitElement {
     return `${
       this._config.icons
         ? this._config.icons
-        : "https://cdn.jsdelivr.net/gh/bramkragten/custom-ui@master/weather-card/icons/animated/"
+        : "https://cdn.jsdelivr.net/gh/bramkragten/weather-card@master/dist/icons/"
     }${
       sun && sun == "below_horizon"
         ? weatherIconsNight[condition]

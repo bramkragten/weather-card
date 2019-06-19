@@ -10,33 +10,15 @@ Thanks for all picking this card up.
 
 ## Installation:
 
-You have 2 options, hosted or self hosted (manual). The first option needs internet and will update itself.
-
 ### If you are using Firefox:
 Firefox < 66 does not support all the needed functions yet for the editor. 
 You change this by enabling `javascript.options.dynamicImport` in `about:config`.
-Or use the version without the editor: [Version without editor](https://raw.githubusercontent.com/bramkragten/custom-ui/58c41ad177b002e149497629a26ea10ccfeebcd0/weather-card/weather-card.js)
-
-# Hosted:
-
-Add the following to resources in your lovelace config:
-
-```yaml
-- url: https://cdn.jsdelivr.net/gh/bramkragten/custom-ui@master/weather-card/weather-card.min.js
-  type: module
-```
-
-# Manual:
-
-1. Download the [weather-card.js](https://raw.githubusercontent.com/bramkragten/custom-ui/master/weather-card/weather-card.js) to `/config/www/custom-lovelace/weather-card/`. (or an other folder in `/config/www/`)
-2. Save, the [amCharts icons](https://www.amcharts.com/free-animated-svg-weather-icons/) (The contents of the folder "animated") under `/config/www/custom-lovelace/weather-card/icons/` (or an other folder in `/config/www/`)
-3. If you use Lovelace in storage mode, and want to use the editor, download the [weather-card-editor.js](https://raw.githubusercontent.com/bramkragten/custom-ui/master/weather-card/weather-card-editor.js) to `/config/www/custom-lovelace/weather-card/`. (or the folder you used above)
 
 Add the following to resources in your lovelace config:
 
 ```yaml
 resources:
-  - url: /local/custom-lovelace/weather-card/weather-card.js
+  - url: /community_plugin/weather-card/weather-card.js
     type: module
 ```
 
@@ -55,7 +37,7 @@ If you want to use your local icons add the location to the icons:
 ```yaml
 - type: custom:weather-card
   entity: weather.yourweatherentity
-  icons: "/local/custom-lovelace/weather-card/icons/"
+  icons: "/community_plugin/weather-card/icons/"
 ```
 
 Make sure the `sun` component is enabled:
