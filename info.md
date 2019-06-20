@@ -64,6 +64,21 @@ If you want to show the sunrise and sunset times, make sure the `sun` component 
 sun:
 ```
 
+### Hiding attributes:
+
+If you want to hide certain attributes, this is also possible:
+
+```yaml
+- type: custom:weather-card
+  entity: weather.yourweatherentity
+  hide_humidity: true
+  hide_pressure: true
+  hide_sunset: true
+  hide_visibility: true
+  hide_wind: true
+  hide_forecast: true
+```
+
 ### Dark Sky:
 
 When using Dark Sky you should put the mode to `daily` if you want a daily forecast with highs and lows.
