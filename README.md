@@ -22,15 +22,15 @@ Or use the version without the editor: [Version without editor](https://raw.gith
 Add the following to resources in your lovelace config:
 
 ```yaml
-- url: https://cdn.jsdelivr.net/gh/bramkragten/custom-ui@master/weather-card/weather-card.min.js
+- url: https://cdn.jsdelivr.net/gh/bramkragten/weather-card/dist/weather-card.min.js
   type: module
 ```
 
 # Manual:
 
-1. Download the [weather-card.js](https://raw.githubusercontent.com/bramkragten/custom-ui/master/weather-card/weather-card.js) to `/config/www/custom-lovelace/weather-card/`. (or an other folder in `/config/www/`)
+1. Download the [weather-card.js](https://raw.githubusercontent.com/bramkragten/weather-card/v1.2.0/dist/weather-card.js) to `/config/www/custom-lovelace/weather-card/`. (or an other folder in `/config/www/`)
 2. Save, the [amCharts icons](https://www.amcharts.com/free-animated-svg-weather-icons/) (The contents of the folder "animated") under `/config/www/custom-lovelace/weather-card/icons/` (or an other folder in `/config/www/`)
-3. If you use Lovelace in storage mode, and want to use the editor, download the [weather-card-editor.js](https://raw.githubusercontent.com/bramkragten/custom-ui/master/weather-card/weather-card-editor.js) to `/config/www/custom-lovelace/weather-card/`. (or the folder you used above)
+3. If you use Lovelace in storage mode, and want to use the editor, download the [weather-card-editor.js](https://raw.githubusercontent.com/bramkragten/weather-card/v1.2.0/dist/weather-card-editor.js) to `/config/www/custom-lovelace/weather-card/`. (or the folder you used above)
 
 Add the following to resources in your lovelace config:
 
