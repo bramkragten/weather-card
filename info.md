@@ -25,7 +25,7 @@ Add the following to resources in your lovelace config:
 
 ```yaml
 resources:
-  - url: /community_plugin/weather-card/weather-card.js
+  - url: /community_plugin/weather-card/weather-card-mod.js
     type: module
 ```
 
@@ -34,7 +34,7 @@ resources:
 And add a card with type `custom:weather-card-mod`:
 
 ```yaml
-- type: custom:weather-card
+- type: custom:weather-card-mod
   entity: weather.yourweatherentity
   name: Optional name
 ```
@@ -42,9 +42,9 @@ And add a card with type `custom:weather-card-mod`:
 If you want to use your local icons add the location to the icons:
 
 ```yaml
-- type: custom:weather-card
+- type: custom:weather-card-mod
   entity: weather.yourweatherentity
-  icons: "/community_plugin/weather-card/icons/"
+  icons: "/community_plugin/weather-card-mod/icons/"
 ```
 
 Make sure the `sun` component is enabled:
