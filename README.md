@@ -22,15 +22,6 @@ Firefox < 66 does not support all the needed functions yet for the editor.
 You change this by enabling `javascript.options.dynamicImport` in `about:config`.
 Or use the version without the editor: [Version without editor](https://raw.githubusercontent.com/bramkragten/custom-ui/58c41ad177b002e149497629a26ea10ccfeebcd0/weather-card/weather-card.js)
 
-# Hosted:
-
-Add the following to resources in your lovelace config:
-
-```yaml
-- url: https://cdn.jsdelivr.net/gh/bramkragten/weather-card/dist/weather-card.min.js
-  type: module
-```
-
 # Manual:
 
 1. Download the [weather-card-mod.js](https://github.com/helto4real/weather-card-mod/tree/master/dist/weather-card.js) to `/config/www/custom-lovelace/weather-card/`. (or an other folder in `/config/www/`)
