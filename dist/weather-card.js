@@ -80,7 +80,7 @@ function hasConfigOrEntityChanged(element, changedProps) {
   return true;
 }
 
-class WeatherCard extends LitElement {
+class WeatherCardMod extends LitElement {
   static get properties() {
     return {
       _config: {},
@@ -185,8 +185,8 @@ class WeatherCard extends LitElement {
                   parseInt((stateObj.attributes.wind_bearing + 11.25) / 22.5)
                 ]
               }
-              ${stateObj.attributes.wind_speed}<span class="unit">
-                ${this.getUnit("length")}/h
+              ${ Math.round( stateObj.attributes.wind_speed/3.6 * 10 ) / 10}<span class="unit">
+              m/s
               </span>
               <br />
               <span class="ha-icon"
@@ -255,6 +255,10 @@ class WeatherCard extends LitElement {
                                 `
                               : ""
                           }
+                          <br /><span class="lowTemp">
+                            ${daily.precipitation}${
+                                this.getUnit("precipitation")
+                            }</span>
                         </div>
                       `
                     )
@@ -382,7 +386,7 @@ class WeatherCard extends LitElement {
         .forecast {
           width: 100%;
           margin: 0 auto;
-          height: 9em;
+          height: 10.6em;
         }
 
         .day {
@@ -452,4 +456,4 @@ class WeatherCard extends LitElement {
     `;
   }
 }
-customElements.define("weather-card", WeatherCard);
+customElements.define("weather-card-mod", WeatherCardMod);

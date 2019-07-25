@@ -1,4 +1,8 @@
-# Lovelace animated weather card
+# Lovelace animated weather card (modified by @helto4real)
+*Modified the original card from @bramkragten to show percipitation and use eu m/s as wind speed unit*, all else is @bramkragten work. Thanks for this awesome work!*
+
+Please checkout the original and instructions at https://github.com/bramkragten/weather-card
+
 
 Originally created for the [old UI](https://community.home-assistant.io/t/custom-ui-weather-state-card-with-a-question/23008) converted by @arsaboo and @ciotlosm to [Lovelace](https://community.home-assistant.io/t/custom-ui-weather-state-card-with-a-question/23008/291) and now converted to Lit to make it even better.
 
