@@ -11,7 +11,8 @@ Thanks for all picking this card up.
 ## Installation:
 
 ### If you are using Firefox:
-Firefox < 66 does not support all the needed functions yet for the editor. 
+
+Firefox < 66 does not support all the needed functions yet for the editor.
 You change this by enabling `javascript.options.dynamicImport` in `about:config`.
 
 Add the following to resources in your lovelace config:
@@ -40,7 +41,23 @@ If you want to use your local icons add the location to the icons:
   icons: "/community_plugin/weather-card/icons/"
 ```
 
-Make sure the `sun` component is enabled:
+You can choose wich elements of the weather card you want to show:
+
+The 3 different rows, being:
+
+- The current weather icon, the current temperature and title
+- The details about the current weather
+- The 5 day forecast
+
+```yaml
+type: custom:weather-card
+entity: weather.yourweatherentity
+current: true
+details: false
+forecast: true
+```
+
+If you want to show the sunrise and sunset times, make sure the `sun` component is enabled:
 
 ```yaml
 # Example configuration.yaml entry

@@ -13,7 +13,8 @@ Thanks for all picking this card up.
 You have 2 options, hosted or self hosted (manual). The first option needs internet and will update itself.
 
 ### If you are using Firefox:
-Firefox < 66 does not support all the needed functions yet for the editor. 
+
+Firefox < 66 does not support all the needed functions yet for the editor.
 You change this by enabling `javascript.options.dynamicImport` in `about:config`.
 Or use the version without the editor: [Version without editor](https://raw.githubusercontent.com/bramkragten/custom-ui/58c41ad177b002e149497629a26ea10ccfeebcd0/weather-card/weather-card.js)
 
@@ -45,20 +46,36 @@ resources:
 And add a card with type `custom:weather-card`:
 
 ```yaml
-- type: custom:weather-card
-  entity: weather.yourweatherentity
-  name: Optional name
+type: custom:weather-card
+entity: weather.yourweatherentity
+name: Optional name
 ```
 
 If you want to use your local icons add the location to the icons:
 
 ```yaml
-- type: custom:weather-card
-  entity: weather.yourweatherentity
-  icons: "/local/custom-lovelace/weather-card/icons/"
+type: custom:weather-card
+entity: weather.yourweatherentity
+icons: "/local/custom-lovelace/weather-card/icons/"
 ```
 
-Make sure the `sun` component is enabled:
+You can choose wich elements of the weather card you want to show:
+
+The 3 different rows, being:
+
+- The current weather icon, the current temperature and title
+- The details about the current weather
+- The 5 day forecast
+
+```yaml
+type: custom:weather-card
+entity: weather.yourweatherentity
+current: true
+details: false
+forecast: true
+```
+
+If you want to show the sunrise and sunset times, make sure the `sun` component is enabled:
 
 ```yaml
 # Example configuration.yaml entry
