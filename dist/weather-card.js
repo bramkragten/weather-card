@@ -104,6 +104,8 @@ class WeatherCard extends LitElement {
     this._config = config;
   }
 
+  numberElements = 0;
+
   shouldUpdate(changedProps) {
     return hasConfigOrEntityChanged(this, changedProps);
   }
@@ -112,6 +114,8 @@ class WeatherCard extends LitElement {
     if (!this._config || !this.hass) {
       return html``;
     }
+    
+    this.numberElements = 0;
 
     const stateObj = this.hass.states[this._config.entity];
 
@@ -132,19 +136,22 @@ class WeatherCard extends LitElement {
       `;
     }
 
-    const lang = this.hass.selectedLanguage || this.hass.language;
-
-    const next_rising = new Date(
-      this.hass.states["sun.sun"].attributes.next_rising
-    );
-    const next_setting = new Date(
-      this.hass.states["sun.sun"].attributes.next_setting
-    );
-
     return html`
       ${this.renderStyle()}
       <ha-card @click="${this._handleClick}">
-        <span
+        ${this._config.current !== false ? this.renderCurrent(stateObj) : ""}
+        ${this._config.details !== false ? this.renderDetails(stateObj) : ""}
+        ${this._config.forecast !== false ? this.renderForecast(stateObj.attributes.forecast) : ""}
+      </ha-card>
+    `;
+  }
+
+  renderCurrent(stateObj) {
+    this.numberElements++;
+
+    return html`
+    <div class="current ${this.numberElements > 1 ? "spacer" : ""}">
+    <span
           class="icon bigger"
           style="background: none, url(${
             this.getWeatherIcon(
@@ -169,8 +176,27 @@ class WeatherCard extends LitElement {
           }</span
         >
         <span class="tempc"> ${this.getUnit("temperature")}</span>
-        <span>
-          <ul class="variations">
+    </div>`;
+  }
+  
+  renderDetails(stateObj) {
+    const sun = this.hass.states["sun.sun"];
+    let next_rising;
+    let next_setting;
+    
+    if (sun) {
+        next_rising = new Date(
+          sun.attributes.next_rising
+        );
+        next_setting = new Date(
+          sun.attributes.next_setting
+        );
+    }
+
+    this.numberElements++;
+
+    return html`
+          <ul class="variations ${this.numberElements > 1 ? "spacer" : ""}">
             <li>
               <span class="ha-icon"
                 ><ha-icon icon="mdi:water-percent"></ha-icon
@@ -189,10 +215,12 @@ class WeatherCard extends LitElement {
                 ${this.getUnit("length")}/h
               </span>
               <br />
+              ${next_rising ? html`
               <span class="ha-icon"
                 ><ha-icon icon="mdi:weather-sunset-up"></ha-icon
               ></span>
               ${next_rising.toLocaleTimeString()}
+              ` : "" }
             </li>
             <li>
               <span class="ha-icon"><ha-icon icon="mdi:gauge"></ha-icon></span
@@ -207,20 +235,29 @@ class WeatherCard extends LitElement {
                 ${this.getUnit("length")}
               </span>
               <br />
+              ${next_setting ? html`
               <span class="ha-icon"
                 ><ha-icon icon="mdi:weather-sunset-down"></ha-icon
               ></span>
               ${next_setting.toLocaleTimeString()}
+              ` : "" }
             </li>
           </ul>
-        </span>
-        ${
-          stateObj.attributes.forecast &&
-          stateObj.attributes.forecast.length > 0
-            ? html`
-                <div class="forecast clear">
+    `;
+  }  
+
+  renderForecast(forecast) {
+          if (!forecast || forecast.length === 0) {
+              return html``;
+          }
+          
+          const lang = this.hass.selectedLanguage || this.hass.language;
+            
+          this.numberElements++;
+          return html`
+                <div class="forecast clear ${this.numberElements > 1 ? "spacer" : ""}">
                   ${
-                    stateObj.attributes.forecast.slice(0, 5).map(
+                    forecast.slice(0, 5).map(
                       daily => html`
                         <div class="day">
                           <span class="dayname"
@@ -260,11 +297,7 @@ class WeatherCard extends LitElement {
                     )
                   }
                 </div>
-              `
-            : ""
-        }
-      </ha-card>
-    `;
+              `;
   }
 
   getWeatherIcon(condition, sun) {
@@ -307,11 +340,15 @@ class WeatherCard extends LitElement {
         ha-card {
           cursor: pointer;
           margin: auto;
-          padding-top: 2.5em;
+          padding-top: 1.3em;
           padding-bottom: 1.3em;
           padding-left: 1em;
           padding-right: 1em;
           position: relative;
+        }
+
+        .spacer {
+            padding-top: 1em;
         }
 
         .clear {
@@ -352,6 +389,11 @@ class WeatherCard extends LitElement {
           margin-right: 7px;
         }
 
+        .current {
+          padding-top: 1.2em;
+          margin-bottom: 3.5em;
+        }
+
         .variations {
           display: flex;
           flex-flow: row wrap;
@@ -359,8 +401,8 @@ class WeatherCard extends LitElement {
           font-weight: 300;
           color: var(--primary-text-color);
           list-style: none;
-          margin-top: 4.5em;
           padding: 0;
+          margin: 0;
         }
 
         .variations li {
