@@ -17,7 +17,7 @@ const fireEvent = (node, type, detail, options) => {
 };
 
 const LitElement = Object.getPrototypeOf(
-  customElements.get("ha-panel-lovelace")
+  customElements.get("hui-view")
 );
 const html = LitElement.prototype.html;
 
