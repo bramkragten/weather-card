@@ -240,8 +240,6 @@ class WeatherCard extends LitElement {
 
     const lang = this.hass.selectedLanguage || this.hass.language;
 
-    console.log(forecast);
-
     this.numberElements++;
     return html`
       <div class="forecast clear ${this.numberElements > 1 ? "spacer" : ""}">
