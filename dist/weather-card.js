@@ -102,8 +102,6 @@ class WeatherCard extends LitElement {
     this._config = config;
   }
 
-  numberElements = 0;
-
   shouldUpdate(changedProps) {
     return hasConfigOrEntityChanged(this, changedProps);
   }
