@@ -1,11 +1,8 @@
 # Lovelace animated weather card (modified by @helto4real)
 
-*Modified the original card from @bramkragten to show percipitation and use eu m/s as wind speed unit*, all else is @bramkragten work. Thanks for this awesome work!*
-
-
+_Modified the original card from @bramkragten to show percipitation and use eu m/s as wind speed unit_, all else is @bramkragten work. Thanks for this awesome work!\*
 
 Please checkout the original and instructions at https://github.com/bramkragten/weather-card
-
 
 Originally created for the [old UI](https://community.home-assistant.io/t/custom-ui-weather-state-card-with-a-question/23008) converted by @arsaboo and @ciotlosm to [Lovelace](https://community.home-assistant.io/t/custom-ui-weather-state-card-with-a-question/23008/291) and now converted to Lit to make it even better.
 
@@ -18,7 +15,8 @@ Thanks for all picking this card up.
 ## Installation:
 
 ### If you are using Firefox:
-Firefox < 66 does not support all the needed functions yet for the editor. 
+
+Firefox < 66 does not support all the needed functions yet for the editor.
 You change this by enabling `javascript.options.dynamicImport` in `about:config`.
 
 Add the following to resources in your lovelace config:
@@ -36,6 +34,15 @@ And add a card with type `custom:weather-card-mod`:
 ```yaml
 - type: custom:weather-card-mod
   entity: weather.yourweatherentity
+  name: Optional name
+```
+
+If you want to use an sensor as current temperature use the tempsource
+
+```yaml
+- type: custom:weather-card-mod
+  entity: weather.yourweatherentity
+  tempsource: sensor.outside_temp_sensor
   name: Optional name
 ```
 
