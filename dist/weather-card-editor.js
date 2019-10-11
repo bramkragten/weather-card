@@ -1,44 +1,10 @@
-const _customElementsDefine = window.customElements.define;
-window.customElements.define = (name, cl, conf) => {
-  if (!customElements.get(name)) {
-    _customElementsDefine.call(window.customElements, name, cl, conf);
-  } else {
-    console.warn(`${name} has been defined twice`);
-  }
-};
-
-if (!customElements.get("paper-input")) {
-  console.log("imported", "paper-input");
-  import("https://unpkg.com/@polymer/paper-input/paper-input.js?module");
-}
-if (!customElements.get("paper-toggle-button")) {
-  console.log("imported", "paper-toggle-button");
-  import(
-    "https://unpkg.com/@polymer/paper-toggle-button/paper-toggle-button.js?module"
-  );
-}
-if (!customElements.get("paper-dropdown-menu")) {
-  console.log("imported", "paper-dropdown-menu");
-  import(
-    "https://unpkg.com/@polymer/paper-dropdown-menu/paper-dropdown-menu.js?module"
-  );
-}
-if (!customElements.get("paper-listbox")) {
-  console.log("imported", "paper-listbox");
-  import("https://unpkg.com/@polymer/paper-listbox/paper-listbox.js?module");
-}
-if (!customElements.get("paper-item")) {
-  console.log("imported", "paper-item");
-  import("https://unpkg.com/@polymer/paper-item/paper-item.js?module");
-}
-
 const fireEvent = (node, type, detail, options) => {
   options = options || {};
   detail = detail === null || detail === undefined ? {} : detail;
   const event = new Event(type, {
     bubbles: options.bubbles === undefined ? true : options.bubbles,
     cancelable: Boolean(options.cancelable),
-    composed: options.composed === undefined ? true : options.composed
+    composed: options.composed === undefined ? true : options.composed,
   });
   event.detail = detail;
   node.dispatchEvent(event);
@@ -87,7 +53,7 @@ export class WeatherCardEditor extends LitElement {
     }
 
     const entities = Object.keys(this.hass.states).filter(
-      eid => eid.substr(0, eid.indexOf(".")) === "weather"
+      (eid) => eid.substr(0, eid.indexOf(".")) === "weather"
     );
 
     return html`
@@ -127,7 +93,7 @@ export class WeatherCardEditor extends LitElement {
                     slot="dropdown-content"
                     .selected="${entities.indexOf(this._entity)}"
                   >
-                    ${entities.map(entity => {
+                    ${entities.map((entity) => {
                       return html`
                         <paper-item>${entity}</paper-item>
                       `;
@@ -135,24 +101,47 @@ export class WeatherCardEditor extends LitElement {
                   </paper-listbox>
                 </paper-dropdown-menu>
               `}
-          <paper-toggle-button
-            .checked=${this._current}
-            .configValue="${"current"}"
-            @change="${this._valueChanged}"
-            >Show current</paper-toggle-button
-          >
-          <paper-toggle-button
-            .checked=${this._details}
-            .configValue="${"details"}"
-            @change="${this._valueChanged}"
-            >Show details</paper-toggle-button
-          >
-          <paper-toggle-button
-            .checked=${this._forecast}
-            .configValue="${"forecast"}"
-            @change="${this._valueChanged}"
-            >Show forecast</paper-toggle-button
-          >
+          ${customElements.get("paper-toggle-button")
+            ? html`
+                <paper-toggle-button
+                  .checked=${this._current}
+                  .configValue="${"current"}"
+                  @change="${this._valueChanged}"
+                  >Show current</paper-toggle-button
+                >
+                <paper-toggle-button
+                  .checked=${this._details}
+                  .configValue="${"details"}"
+                  @change="${this._valueChanged}"
+                  >Show details</paper-toggle-button
+                >
+                <paper-toggle-button
+                  .checked=${this._forecast}
+                  .configValue="${"forecast"}"
+                  @change="${this._valueChanged}"
+                  >Show forecast</paper-toggle-button
+                >
+              `
+            : html`
+                <ha-switch
+                  .checked=${this._current}
+                  .configValue="${"current"}"
+                  @change="${this._valueChanged}"
+                  >Show current</ha-switch
+                >
+                <ha-switch
+                  .checked=${this._details}
+                  .configValue="${"details"}"
+                  @change="${this._valueChanged}"
+                  >Show details</ha-switch
+                >
+                <ha-switch
+                  .checked=${this._forecast}
+                  .configValue="${"forecast"}"
+                  @change="${this._valueChanged}"
+                  >Show forecast</ha-switch
+                >
+              `}
         </div>
       </div>
     `;
@@ -173,7 +162,7 @@ export class WeatherCardEditor extends LitElement {
         this._config = {
           ...this._config,
           [target.configValue]:
-            target.checked !== undefined ? target.checked : target.value
+            target.checked !== undefined ? target.checked : target.value,
         };
       }
     }
