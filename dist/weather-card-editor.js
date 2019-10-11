@@ -11,8 +11,16 @@ const fireEvent = (node, type, detail, options) => {
   return event;
 };
 
+if (
+  !customElements.get("ha-switch") &&
+  customElements.get("paper-toggle-button")
+) {
+  customElements.define("ha-switch", customElements.get("paper-toggle-button"));
+}
+
 const LitElement = Object.getPrototypeOf(customElements.get("hui-view"));
 const html = LitElement.prototype.html;
+const css = LitElement.prototype.css;
 
 export class WeatherCardEditor extends LitElement {
   setConfig(config) {
@@ -57,7 +65,6 @@ export class WeatherCardEditor extends LitElement {
     );
 
     return html`
-      ${this.renderStyle()}
       <div class="card-config">
         <div>
           <paper-input
@@ -101,47 +108,24 @@ export class WeatherCardEditor extends LitElement {
                   </paper-listbox>
                 </paper-dropdown-menu>
               `}
-          ${customElements.get("paper-toggle-button")
-            ? html`
-                <paper-toggle-button
-                  .checked=${this._current}
-                  .configValue="${"current"}"
-                  @change="${this._valueChanged}"
-                  >Show current</paper-toggle-button
-                >
-                <paper-toggle-button
-                  .checked=${this._details}
-                  .configValue="${"details"}"
-                  @change="${this._valueChanged}"
-                  >Show details</paper-toggle-button
-                >
-                <paper-toggle-button
-                  .checked=${this._forecast}
-                  .configValue="${"forecast"}"
-                  @change="${this._valueChanged}"
-                  >Show forecast</paper-toggle-button
-                >
-              `
-            : html`
-                <ha-switch
-                  .checked=${this._current}
-                  .configValue="${"current"}"
-                  @change="${this._valueChanged}"
-                  >Show current</ha-switch
-                >
-                <ha-switch
-                  .checked=${this._details}
-                  .configValue="${"details"}"
-                  @change="${this._valueChanged}"
-                  >Show details</ha-switch
-                >
-                <ha-switch
-                  .checked=${this._forecast}
-                  .configValue="${"forecast"}"
-                  @change="${this._valueChanged}"
-                  >Show forecast</ha-switch
-                >
-              `}
+          <ha-switch
+            .checked=${this._current}
+            .configValue="${"current"}"
+            @change="${this._valueChanged}"
+            >Show current</ha-switch
+          >
+          <ha-switch
+            .checked=${this._details}
+            .configValue="${"details"}"
+            @change="${this._valueChanged}"
+            >Show details</ha-switch
+          >
+          <ha-switch
+            .checked=${this._forecast}
+            .configValue="${"forecast"}"
+            @change="${this._valueChanged}"
+            >Show forecast</ha-switch
+          >
         </div>
       </div>
     `;
@@ -169,20 +153,18 @@ export class WeatherCardEditor extends LitElement {
     fireEvent(this, "config-changed", { config: this._config });
   }
 
-  renderStyle() {
-    return html`
-      <style>
-        paper-toggle-button {
-          padding-top: 16px;
-        }
-        .side-by-side {
-          display: flex;
-        }
-        .side-by-side > * {
-          flex: 1;
-          padding-right: 4px;
-        }
-      </style>
+  static get styles() {
+    return css`
+      ha-switch {
+        padding-top: 16px;
+      }
+      .side-by-side {
+        display: flex;
+      }
+      .side-by-side > * {
+        flex: 1;
+        padding-right: 4px;
+      }
     `;
   }
 }
