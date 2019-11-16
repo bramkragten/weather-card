@@ -485,4 +485,4 @@ class WeatherCardMod extends LitElement {
     `;
   }
 }
-customElements.define("weather-card", WeatherCard);
+customElements.define("weather-card-mod", WeatherCardMod);
