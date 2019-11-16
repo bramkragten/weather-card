@@ -1,5 +1,11 @@
+## 1.2.1m
+
+Added latest changes from original bramkragten card aug9->oct11
+
 ## 1.2.0m
+
 - Mod the windspeed to use m/s and added precipitation from original card
+
 ## 1.2.0
 
 - Added UI editor
