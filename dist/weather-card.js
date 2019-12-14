@@ -323,6 +323,10 @@ class WeatherCard extends LitElement {
   renderStyle() {
     return html`
       <style>
+        :host {
+          position: relative;
+        }
+        
         ha-card {
           cursor: pointer;
           margin: auto;
@@ -330,7 +334,9 @@ class WeatherCard extends LitElement {
           padding-bottom: 1.3em;
           padding-left: 1em;
           padding-right: 1em;
-          position: relative;
+          position: absolute;
+          top: 0;
+          bottom: 0;
         }
 
         .spacer {
