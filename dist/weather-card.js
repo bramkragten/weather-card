@@ -99,6 +99,11 @@ class WeatherCard extends LitElement {
     if (!config.entity) {
       throw new Error("Please define a weather entity");
     }
+
+    if (config.forecast && config.forecast_days == null) config.forecast_days = 5;
+    if (config.forecast_days <= 1) config.forecast_days = 1;
+    if (config.forecast_days >= 8) config.forecast_days = 8;
+
     this._config = config;
   }
 
@@ -138,7 +143,7 @@ class WeatherCard extends LitElement {
         ${this._config.current !== false ? this.renderCurrent(stateObj) : ""}
         ${this._config.details !== false ? this.renderDetails(stateObj) : ""}
         ${this._config.forecast !== false
-          ? this.renderForecast(stateObj.attributes.forecast)
+          ? this.renderForecast(stateObj.attributes.forecast, this._config.forecast_days)
           : ""}
       </ha-card>
     `;
@@ -231,7 +236,7 @@ class WeatherCard extends LitElement {
     `;
   }
 
-  renderForecast(forecast) {
+  renderForecast(forecast, forecast_days) {
     if (!forecast || forecast.length === 0) {
       return html``;
     }
@@ -241,7 +246,7 @@ class WeatherCard extends LitElement {
     this.numberElements++;
     return html`
       <div class="forecast clear ${this.numberElements > 1 ? "spacer" : ""}">
-        ${forecast.slice(0, 5).map(
+        ${forecast.slice(0, forecast_days).map(
           daily => html`
             <div class="day">
               <div class="dayname">

@@ -55,6 +55,10 @@ export class WeatherCardEditor extends LitElement {
     return this._config.forecast !== false;
   }
 
+  get _forecast_days() {
+    return this._config.forecast_days;
+  }
+
   render() {
     if (!this.hass) {
       return html``;
@@ -125,6 +129,13 @@ export class WeatherCardEditor extends LitElement {
             .configValue="${"forecast"}"
             @change="${this._valueChanged}"
             >Show forecast</ha-switch
+          >
+          <paper-input
+            label="Forecast Days"
+            .value="${this._forecast_days}"
+            .configValue="${"forecast_days"}"
+            @value-changed="${this._valueChanged}"
+            ></paper-input
           >
         </div>
       </div>

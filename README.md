@@ -65,7 +65,7 @@ The 3 different rows, being:
 
 - The current weather icon, the current temperature and title
 - The details about the current weather
-- The 5 day forecast
+- The future forecast, default is 5 days, can be set from 1 to 8 days
 
 ```yaml
 type: custom:weather-card
@@ -73,6 +73,7 @@ entity: weather.yourweatherentity
 current: true
 details: false
 forecast: true
+forecast_days: 5
 ```
 
 If you want to show the sunrise and sunset times, make sure the `sun` component is enabled:
