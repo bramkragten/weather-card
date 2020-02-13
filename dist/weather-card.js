@@ -1,5 +1,6 @@
 const LitElement = Object.getPrototypeOf(customElements.get("hui-view"));
 const html = LitElement.prototype.html;
+const css = LitElement.prototype.css;
 
 const weatherIconsDay = {
   clear: "day",
@@ -133,7 +134,6 @@ class WeatherCard extends LitElement {
     }
 
     return html`
-      ${this.renderStyle()}
       <ha-card @click="${this._handleClick}">
         ${this._config.current !== false ? this.renderCurrent(stateObj) : ""}
         ${this._config.details !== false ? this.renderDetails(stateObj) : ""}
@@ -251,9 +251,7 @@ class WeatherCard extends LitElement {
               </div>
               <i
                 class="icon"
-                style="background: none, url('${this.getWeatherIcon(
-                  daily.condition.toLowerCase()
-                )}') no-repeat; background-size: contain;"
+                style=`background: none, url('${this.getWeatherIcon(daily.condition.toLowerCase())}') no-repeat; background-size: contain`
               ></i>
               <div class="highTemp">
                 ${daily.temperature}${this.getUnit("temperature")}
@@ -315,8 +313,8 @@ class WeatherCard extends LitElement {
     return 3;
   }
 
-  renderStyle() {
-    return html`
+  static get styles() {
+    return css`
       <style>
         ha-card {
           cursor: pointer;

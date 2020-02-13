@@ -4,7 +4,7 @@ const fireEvent = (node, type, detail, options) => {
   const event = new Event(type, {
     bubbles: options.bubbles === undefined ? true : options.bubbles,
     cancelable: Boolean(options.cancelable),
-    composed: options.composed === undefined ? true : options.composed,
+    composed: options.composed === undefined ? true : options.composed
   });
   event.detail = detail;
   node.dispatchEvent(event);
@@ -24,7 +24,7 @@ const css = LitElement.prototype.css;
 
 export class WeatherCardEditor extends LitElement {
   setConfig(config) {
-    this._config = config;
+    this._config = { ...config };
   }
 
   static get properties() {
@@ -61,7 +61,7 @@ export class WeatherCardEditor extends LitElement {
     }
 
     const entities = Object.keys(this.hass.states).filter(
-      (eid) => eid.substr(0, eid.indexOf(".")) === "weather"
+      eid => eid.substr(0, eid.indexOf(".")) === "weather"
     );
 
     return html`
@@ -100,7 +100,7 @@ export class WeatherCardEditor extends LitElement {
                     slot="dropdown-content"
                     .selected="${entities.indexOf(this._entity)}"
                   >
-                    ${entities.map((entity) => {
+                    ${entities.map(entity => {
                       return html`
                         <paper-item>${entity}</paper-item>
                       `;
@@ -146,7 +146,7 @@ export class WeatherCardEditor extends LitElement {
         this._config = {
           ...this._config,
           [target.configValue]:
-            target.checked !== undefined ? target.checked : target.value,
+            target.checked !== undefined ? target.checked : target.value
         };
       }
     }
