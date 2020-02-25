@@ -343,6 +343,11 @@ class WeatherCard extends LitElement {
         font-size: 3em;
         color: var(--primary-text-color);
       }
+      @media (min-width: 420px){
+        font-size: 2.2em;
+        left: 4em;
+        top: 1em;
+      }
       .temp {
         font-weight: 300;
         font-size: 4em;
