@@ -23,8 +23,8 @@ Or use the version without the editor: [Version without editor](https://raw.gith
 Add the following to resources in your lovelace config:
 
 ```yaml
-- url: https://cdn.jsdelivr.net/gh/bramkragten/weather-card/dist/weather-card.min.js
-  type: module
+  - type: js
+    url: https://cdn.jsdelivr.net/gh/bramkragten/weather-card/dist/weather-card.min.js
 ```
 
 # Manual:
