@@ -241,13 +241,14 @@ class WeatherCard extends LitElement {
     this.numberElements++;
     return html`
       <div class="forecast clear ${this.numberElements > 1 ? "spacer" : ""}">
-        ${forecast.slice(0, 5).map(
-          daily => html`
+      ${forecast.slice(0, this._config.number_of_forecasts ? this._config.number_of_forecasts : 5 ).map(
+        daily => html`
             <div class="day">
               <div class="dayname">
-                ${new Date(daily.datetime).toLocaleDateString(lang, {
-                  weekday: "short"
-                })}
+              ${this._config.hourly_forecast 
+                ? new Date(daily.datetime).toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' })
+                : new Date(daily.datetime).toLocaleDateString(lang, {weekday: "short" })
+              }
               </div>
               <i
                 class="icon"

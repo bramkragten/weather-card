@@ -65,7 +65,7 @@ The 3 different rows, being:
 
 - The current weather icon, the current temperature and title
 - The details about the current weather
-- The 5 day forecast
+- The X day forecast or hourly forecast
 
 ```yaml
 type: custom:weather-card
@@ -73,6 +73,8 @@ entity: weather.yourweatherentity
 current: true
 details: false
 forecast: true
+hourly_forecast: false
+number_of_forecasts: 5
 ```
 
 If you want to show the sunrise and sunset times, make sure the `sun` component is enabled:
@@ -92,4 +94,15 @@ weather:
   - platform: darksky
     api_key: YOUR_API_KEY
     mode: daily
+```
+
+### OpenWeather Map:
+
+When using OpenWeather map you can select hourly(default) or daily forecast to show.
+
+```yaml
+# Example configuration.yaml entry
+weather:
+  - platform: openweathermap
+    api_key: YOUR_API_KEY
 ```
