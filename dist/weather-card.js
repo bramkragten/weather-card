@@ -371,7 +371,7 @@ class WeatherCard extends LitElement {
       }
 
       .current {
-        padding-top: 1.2em;
+        padding: 1.2em 0;
         margin-bottom: 3.5em;
       }
 
