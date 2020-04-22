@@ -55,6 +55,14 @@ export class WeatherCardEditor extends LitElement {
     return this._config.forecast !== false;
   }
 
+  get _hourly_forecast() {
+    return this._config.hourly_forecast !== false;
+  }
+
+  get _number_of_forecasts() {
+    return this._config.number_of_forecasts || 5;
+  }
+
   render() {
     if (!this.hass) {
       return html``;
@@ -126,6 +134,18 @@ export class WeatherCardEditor extends LitElement {
             @change="${this._valueChanged}"
             >Show forecast</ha-switch
           >
+          <ha-switch
+          .checked=${this._hourly_forecast}
+          .configValue="${"hourly_forecast"}"
+          @change="${this._valueChanged}"
+          >Show hourly forecast</ha-switch
+          >
+          <paper-input
+          label="Number of future forcasts"
+          type="number" min="1" max="8" value=${this._number_of_forecasts}
+          .configValue="${"number_of_forecasts"}"
+          @value-changed="${this._valueChanged}"
+          ></paper-input>
         </div>
       </div>
     `;
