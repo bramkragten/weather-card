@@ -344,19 +344,6 @@ class WeatherCard extends LitElement {
         color: var(--primary-text-color);
       }
 
-      @media (max-width: 460px){
-        .title {
-          font-size: 2.2em;
-          left: 4em;
-        }
-        .temp {
-          font-size: 3em;
-        }
-        .tempc {
-          font-size: 1em;
-        }
-      }
-
       .temp {
         font-weight: 300;
         font-size: 4em;
@@ -374,6 +361,19 @@ class WeatherCard extends LitElement {
         right: 1em;
         margin-top: -14px;
         margin-right: 7px;
+      }
+
+      @media (max-width: 460px){
+        .title {
+          font-size: 2.2em;
+          left: 4em;
+        }
+        .temp {
+          font-size: 3em;
+        }
+        .tempc {
+          font-size: 1em;
+        }
       }
 
       .current {
