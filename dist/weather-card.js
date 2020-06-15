@@ -18,7 +18,7 @@ const weatherIconsDay = {
   sunny: "day",
   windy: "cloudy",
   "windy-variant": "cloudy-day-3",
-  exceptional: "!!"
+  exceptional: "!!",
 };
 
 const weatherIconsNight = {
@@ -26,7 +26,7 @@ const weatherIconsNight = {
   clear: "night",
   sunny: "night",
   partlycloudy: "cloudy-night-3",
-  "windy-variant": "cloudy-night-3"
+  "windy-variant": "cloudy-night-3",
 };
 
 const windDirections = [
@@ -46,8 +46,17 @@ const windDirections = [
   "WNW",
   "NW",
   "NNW",
-  "N"
+  "N",
 ];
+
+window.customCards = window.customCards || [];
+window.customCards.push({
+  type: "weather-card",
+  name: "Weather Card",
+  description: "A custom weather card with animated icons.",
+  preview: true,
+  documentationURL: "https://github.com/bramkragten/weather-card",
+});
 
 const fireEvent = (node, type, detail, options) => {
   options = options || {};
@@ -55,7 +64,7 @@ const fireEvent = (node, type, detail, options) => {
   const event = new Event(type, {
     bubbles: options.bubbles === undefined ? true : options.bubbles,
     cancelable: Boolean(options.cancelable),
-    composed: options.composed === undefined ? true : options.composed
+    composed: options.composed === undefined ? true : options.composed,
   });
   event.detail = detail;
   node.dispatchEvent(event);
@@ -83,7 +92,7 @@ class WeatherCard extends LitElement {
   static get properties() {
     return {
       _config: {},
-      hass: {}
+      hass: {},
     };
   }
 
@@ -92,8 +101,12 @@ class WeatherCard extends LitElement {
     return document.createElement("weather-card-editor");
   }
 
-  static getStubConfig() {
-    return {};
+  static getStubConfig(hass, unusedEntities, allEntities) {
+    let entity = unusedEntities.find((eid) => eid.split(".")[0] === "weather");
+    if (!entity) {
+      entity = allEntities.find((eid) => eid.split(".")[0] === "weather");
+    }
+    return { entity };
   }
 
   setConfig(config) {
@@ -158,9 +171,7 @@ class WeatherCard extends LitElement {
           >${stateObj.state}
         </span>
         ${this._config.name
-          ? html`
-              <span class="title"> ${this._config.name} </span>
-            `
+          ? html` <span class="title"> ${this._config.name} </span> `
           : ""}
         <span class="temp"
           >${this.getUnit("temperature") == "°F"
@@ -241,43 +252,54 @@ class WeatherCard extends LitElement {
     this.numberElements++;
     return html`
       <div class="forecast clear ${this.numberElements > 1 ? "spacer" : ""}">
-      ${forecast.slice(0, this._config.number_of_forecasts ? this._config.number_of_forecasts : 5 ).map(
-        daily => html`
-            <div class="day">
-              <div class="dayname">
-              ${this._config.hourly_forecast 
-                ? new Date(daily.datetime).toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' })
-                : new Date(daily.datetime).toLocaleDateString(lang, {weekday: "short" })
-              }
+        ${forecast
+          .slice(
+            0,
+            this._config.number_of_forecasts
+              ? this._config.number_of_forecasts
+              : 5
+          )
+          .map(
+            (daily) => html`
+              <div class="day">
+                <div class="dayname">
+                  ${this._config.hourly_forecast
+                    ? new Date(daily.datetime).toLocaleTimeString(lang, {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : new Date(daily.datetime).toLocaleDateString(lang, {
+                        weekday: "short",
+                      })}
+                </div>
+                <i
+                  class="icon"
+                  style="background: none, url('${this.getWeatherIcon(
+                    daily.condition.toLowerCase()
+                  )}') no-repeat; background-size: contain"
+                ></i>
+                <div class="highTemp">
+                  ${daily.temperature}${this.getUnit("temperature")}
+                </div>
+                ${daily.templow !== undefined
+                  ? html`
+                      <div class="lowTemp">
+                        ${daily.templow}${this.getUnit("temperature")}
+                      </div>
+                    `
+                  : ""}
+                ${!this._config.hide_precipitation &&
+                daily.precipitation !== undefined &&
+                daily.precipitation !== null
+                  ? html`
+                      <div class="precipitation">
+                        ${daily.precipitation} ${this.getUnit("precipitation")}
+                      </div>
+                    `
+                  : ""}
               </div>
-              <i
-                class="icon"
-                style="background: none, url('${this.getWeatherIcon(
-                  daily.condition.toLowerCase()
-                )}') no-repeat; background-size: contain"
-              ></i>
-              <div class="highTemp">
-                ${daily.temperature}${this.getUnit("temperature")}
-              </div>
-              ${daily.templow !== undefined
-                ? html`
-                    <div class="lowTemp">
-                      ${daily.templow}${this.getUnit("temperature")}
-                    </div>
-                  `
-                : ""}
-              ${!this._config.hide_precipitation &&
-              daily.precipitation !== undefined &&
-              daily.precipitation !== null
-                ? html`
-                    <div class="precipitation">
-                      ${daily.precipitation} ${this.getUnit("precipitation")}
-                    </div>
-                  `
-                : ""}
-            </div>
-          `
-        )}
+            `
+          )}
       </div>
     `;
   }
@@ -363,7 +385,7 @@ class WeatherCard extends LitElement {
         margin-right: 7px;
       }
 
-      @media (max-width: 460px){
+      @media (max-width: 460px) {
         .title {
           font-size: 2.2em;
           left: 4em;
