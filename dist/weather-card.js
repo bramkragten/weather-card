@@ -120,6 +120,41 @@ class WeatherCard extends LitElement {
     return hasConfigOrEntityChanged(this, changedProps);
   }
 
+  _prepareData() {
+    const weather = this.hass.states[this._config.entity];
+
+    if (!weather) {
+      return null;
+    }
+
+    const data = {
+      state: weather.state,
+      forecast: weather.attributes.forecast,
+      temperature: weather.attributes.temperature,
+      humidity: weather.attributes.humidity,
+      pressure: weather.attributes.pressure,
+      wind_speed:  weather.attributes.wind_speed,
+      wind_bearing: weather.attributes.wind_bearing,
+      visibility:  weather.attributes.visibility,
+      sun: this.hass.states["sun.sun"]
+    };
+
+    if (this._config.sensors) {
+      for (let sensor of Object.keys(this._config.sensors)) {
+        const key = this._config.sensors[sensor];
+        const sensorData = this.hass.states[key];
+
+        if (!sensorData || !sensorData.state) {
+          continue;
+        }
+
+        data[sensor] = sensorData.state;
+      }
+    }
+
+    return data;
+  }
+
   render() {
     if (!this._config || !this.hass) {
       return html``;
@@ -127,9 +162,9 @@ class WeatherCard extends LitElement {
 
     this.numberElements = 0;
 
-    const stateObj = this.hass.states[this._config.entity];
+    const data = this._prepareData();
 
-    if (!stateObj) {
+    if (!data) {
       return html`
         <style>
           .not-found {
@@ -146,18 +181,20 @@ class WeatherCard extends LitElement {
       `;
     }
 
+
+
     return html`
       <ha-card @click="${this._handleClick}">
-        ${this._config.current !== false ? this.renderCurrent(stateObj) : ""}
-        ${this._config.details !== false ? this.renderDetails(stateObj) : ""}
+        ${this._config.current !== false ? this.renderCurrent(data) : ""}
+        ${this._config.details !== false ? this.renderDetails(data) : ""}
         ${this._config.forecast !== false
-          ? this.renderForecast(stateObj.attributes.forecast)
+          ? this.renderForecast(data.forecast)
           : ""}
       </ha-card>
     `;
   }
 
-  renderCurrent(stateObj) {
+  renderCurrent(data) {
     this.numberElements++;
 
     return html`
@@ -165,63 +202,91 @@ class WeatherCard extends LitElement {
         <span
           class="icon bigger"
           style="background: none, url('${this.getWeatherIcon(
-            stateObj.state.toLowerCase(),
-            this.hass.states["sun.sun"]
+            data.state.toLowerCase(),
+            data.sun
           )}') no-repeat; background-size: contain;"
-          >${stateObj.state}
+          >${data.state}
         </span>
         ${this._config.name
           ? html` <span class="title"> ${this._config.name} </span> `
           : ""}
         <span class="temp"
           >${this.getUnit("temperature") == "°F"
-            ? Math.round(stateObj.attributes.temperature)
-            : stateObj.attributes.temperature}</span
+            ? Math.round(data.temperature)
+            : data.temperature}</span
         >
         <span class="tempc"> ${this.getUnit("temperature")}</span>
       </div>
     `;
   }
 
-  renderDetails(stateObj) {
-    const sun = this.hass.states["sun.sun"];
+  renderDetails(data) {
     let next_rising;
     let next_setting;
 
-    if (sun) {
-      next_rising = new Date(sun.attributes.next_rising);
-      next_setting = new Date(sun.attributes.next_setting);
+    if (data.sun) {
+      next_rising = new Date(data.sun.attributes.next_rising);
+      next_setting = new Date(data.sun.attributes.next_setting);
     }
 
     this.numberElements++;
 
+    const hasHumidity = data.humidity !== undefined;
+    const hasWind = data.wind_speed !== undefined;
+    const hasPressure = data.pressure !== undefined;
+    const hasVisibility = data.visibility !== undefined;
+
+
     return html`
       <ul class="variations ${this.numberElements > 1 ? "spacer" : ""}">
-        <li>
-          <ha-icon icon="mdi:water-percent"></ha-icon>
-          ${stateObj.attributes.humidity}<span class="unit"> % </span>
-        </li>
-        <li>
-          <ha-icon icon="mdi:weather-windy"></ha-icon> ${windDirections[
-            parseInt((stateObj.attributes.wind_bearing + 11.25) / 22.5)
-          ]}
-          ${stateObj.attributes.wind_speed}<span class="unit">
-            ${this.getUnit("length")}/h
-          </span>
-        </li>
-        <li>
-          <ha-icon icon="mdi:gauge"></ha-icon>
-          ${stateObj.attributes.pressure}
-          <span class="unit">
-            ${this.getUnit("air_pressure")}
-          </span>
-        </li>
-        <li>
-          <ha-icon icon="mdi:weather-fog"></ha-icon> ${stateObj.attributes
-            .visibility}<span class="unit">
-            ${this.getUnit("length")}
-          </span>
-        </li>
+
+       ${hasHumidity
+          ? html`
+              <li>
+                <ha-icon icon="mdi:water-percent"></ha-icon>
+                ${data.humidity}<span class="unit"> % </span>
+              </li>
+            `
+          : (hasWind ? html`<li></li>` : "")}
+
+       ${hasWind
+          ? html`
+              <li>
+                <ha-icon icon="mdi:weather-windy"></ha-icon> ${windDirections[
+                  parseInt((parseFloat(data.wind_bearing) + 11.25) / 22.5)
+                ]}
+                ${data.wind_speed}<span class="unit">
+                  ${this.getUnit("length")}/h
+                </span>
+              </li>
+            `
+          : (hasHumidity ? html`<li></li>` : "")}
+
+
+       ${hasPressure
+          ? html`
+              <li>
+                <ha-icon icon="mdi:gauge"></ha-icon>
+                ${data.pressure}
+                <span class="unit">
+                  ${this.getUnit("air_pressure")}
+                </span>
+              </li>
+            `
+          : (hasVisibility ? html`<li></li>` : "")}
+
+       ${hasVisibility
+          ? html`
+              <li>
+                <ha-icon icon="mdi:weather-fog"></ha-icon> ${data
+                  .visibility}<span class="unit">
+                  ${this.getUnit("length")}
+                </span>
+              </li>
+            `
+          : (hasPressure ? html`<li></li>` : "")}
+
+
         ${next_rising
           ? html`
               <li>
@@ -230,6 +295,7 @@ class WeatherCard extends LitElement {
               </li>
             `
           : ""}
+
         ${next_setting
           ? html`
               <li>
