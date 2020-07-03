@@ -166,7 +166,7 @@ class WeatherCard extends LitElement {
           class="icon bigger"
           style="background: none, url('${this.getWeatherIcon(
             stateObj.state.toLowerCase(),
-            this.hass.states["sun.sun"].state
+            this.hass.states["sun.sun"]
           )}') no-repeat; background-size: contain;"
           >${stateObj.state}
         </span>
@@ -310,7 +310,7 @@ class WeatherCard extends LitElement {
         ? this._config.icons
         : "https://cdn.jsdelivr.net/gh/bramkragten/weather-card/dist/icons/"
     }${
-      sun && sun == "below_horizon"
+      sun && sun.state == "below_horizon"
         ? weatherIconsNight[condition]
         : weatherIconsDay[condition]
     }.svg`;
