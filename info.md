@@ -19,7 +19,7 @@ Add the following to resources in your lovelace config:
 
 ```yaml
 resources:
-  - url: /community_plugin/weather-card/weather-card.js
+  - url: /hacsfiles/weather-card/weather-card.js
     type: module
 ```
 
