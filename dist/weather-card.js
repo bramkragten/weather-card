@@ -142,6 +142,12 @@ class WeatherCard extends LitElement {
     if (this._config.sensors) {
       for (let sensor of Object.keys(this._config.sensors)) {
         const key = this._config.sensors[sensor];
+
+        if (key === false) {
+          // user didn't want this value, disable it
+          delete data[sensor];
+        }
+
         const sensorData = this.hass.states[key];
 
         if (!sensorData || !sensorData.state) {
@@ -152,8 +158,47 @@ class WeatherCard extends LitElement {
       }
     }
 
+    if (this._config.forecast_extrema !== false) {
+      const extremaSource = this._config.forecast_extrema && this.hass.states[this._config.forecast_extrema] && this.hass.states[this._config.forecast_extrema].attributes.forecast
+          ? this.hass.states[this._config.forecast_extrema].attributes.forecast
+          : data.forecast;
+      data.extrema = this._getWeatherExtrema(extremaSource);
+    }
+
+
     return data;
   }
+
+  _getWeatherExtrema(data) {
+    if (!data || !data.length) {
+      return undefined;
+    }
+
+    let low = undefined;
+    let high = undefined;
+    const today = new Date().getDate();
+
+    for (const forecast of data) {
+      if (new Date(forecast.datetime).getDate() !== today) {
+        break;
+      }
+      if (!high || forecast.temperature > high) {
+        high = forecast.temperature;
+      }
+      if (!low || (forecast.templow && forecast.templow < low)) {
+        low = forecast.templow;
+      }
+      if (!forecast.templow && (!low || forecast.temperature < low)) {
+        low = forecast.temperature;
+      }
+    }
+
+    if (!low && !high) {
+      return undefined;
+    }
+
+    return [low, high];
+  };
 
   render() {
     if (!this._config || !this.hass) {
@@ -197,6 +242,8 @@ class WeatherCard extends LitElement {
   renderCurrent(data) {
     this.numberElements++;
 
+    const hasExtrema = data.extrema !== undefined;
+
     return html`
       <div class="current ${this.numberElements > 1 ? "spacer" : ""}">
         <span
@@ -213,7 +260,10 @@ class WeatherCard extends LitElement {
         <span class="temp"
           >${this.getUnit("temperature") == "°F"
             ? Math.round(data.temperature)
-            : data.temperature}</span
+            : data.temperature}${
+          hasExtrema
+            ? html`<br><span class="extrema">${data.extrema[0]} / ${data.extrema[1]}</span>`
+            : ''}</span
         >
         <span class="tempc"> ${this.getUnit("temperature")}</span>
       </div>
@@ -450,6 +500,12 @@ class WeatherCard extends LitElement {
         color: var(--primary-text-color);
         position: absolute;
         right: 1em;
+        text-align: right;
+      }
+
+      .temp > .extrema {
+        font-size: 0.25em;
+        line-height: 4em;
       }
 
       .tempc {
@@ -477,7 +533,7 @@ class WeatherCard extends LitElement {
       }
 
       .current {
-        padding: 1.2em 0;
+        padding: 1.2em 0 2em 0;
         margin-bottom: 3.5em;
       }
 
