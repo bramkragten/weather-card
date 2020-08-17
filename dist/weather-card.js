@@ -294,18 +294,6 @@ class WeatherCard extends LitElement {
                   ? html`
                       <div class="precipitation">
                         ${Math.round(daily.precipitation*10)/10} ${this.getUnit("precipitation")}
-<<<<<<< HEAD
-=======
-                      </div>
-                    `
-                  : ""}
-                ${!this._config.hide_precipitation &&
-                daily.precipitation_probability !== undefined &&
-                daily.precipitation_probability !== null
-                  ? html`
-                      <div class="precipitation_probability">
-                        ${Math.round(daily.precipitation_probability)} ${this.getUnit("precipitation_probability")}
->>>>>>> 96c156a930e255617009cf748dd827ab114151b7
                       </div>
                     `
                   : ""}
