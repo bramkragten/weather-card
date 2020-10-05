@@ -22,10 +22,7 @@ const LitElement = customElements.get("hui-masonry-view") ? Object.getPrototypeO
 const html = LitElement.prototype.html;
 const css = LitElement.prototype.css;
 
-const helpers = await loadCardHelpers();
-if (helpers.importMoreInfoControl) {
-  helpers.importMoreInfoControl("fan");
-}
+const HELPERS = window.loadCardHelpers();
 
 export class WeatherCardEditor extends LitElement {
   setConfig(config) {
@@ -68,6 +65,14 @@ export class WeatherCardEditor extends LitElement {
     return this._config.number_of_forecasts || 5;
   }
 
+  firstUpdated() {
+    HELPERS.then(help => {
+      if (help.importMoreInfoControl) {
+        help.importMoreInfoControl("fan");
+      }
+    })
+  }
+  
   render() {
     if (!this.hass) {
       return html``;
