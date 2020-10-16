@@ -127,6 +127,7 @@ class WeatherCard extends LitElement {
 
     this.numberElements = 0;
 
+    const lang = this.hass.selectedLanguage || this.hass.language;
     const stateObj = this.hass.states[this._config.entity];
 
     if (!stateObj) {
@@ -149,9 +150,9 @@ class WeatherCard extends LitElement {
     return html`
       <ha-card @click="${this._handleClick}">
         ${this._config.current !== false ? this.renderCurrent(stateObj) : ""}
-        ${this._config.details !== false ? this.renderDetails(stateObj) : ""}
+        ${this._config.details !== false ? this.renderDetails(stateObj, lang) : ""}
         ${this._config.forecast !== false
-          ? this.renderForecast(stateObj.attributes.forecast)
+          ? this.renderForecast(stateObj.attributes.forecast, lang)
           : ""}
       </ha-card>
     `;
@@ -183,9 +184,8 @@ class WeatherCard extends LitElement {
     `;
   }
 
-  renderDetails(stateObj) {
+  renderDetails(stateObj, lang) {
     const sun = this.hass.states["sun.sun"];
-    const lang = this.hass.selectedLanguage || this.hass.language;
     let next_rising;
     let next_setting;
 
@@ -249,12 +249,10 @@ class WeatherCard extends LitElement {
     `;
   }
 
-  renderForecast(forecast) {
+  renderForecast(forecast, lang) {
     if (!forecast || forecast.length === 0) {
       return html``;
     }
-
-    const lang = this.hass.selectedLanguage || this.hass.language;
 
     this.numberElements++;
     return html`
