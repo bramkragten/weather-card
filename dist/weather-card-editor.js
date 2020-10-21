@@ -123,33 +123,40 @@ export class WeatherCardEditor extends LitElement {
       return html``;
     }
 
-    /*const weatherEntities = Object.keys(this.hass.states).filter(
-      (eid) => eid.substr(0, eid.indexOf(".")) === "weather"
-    );
-
-    const sensorEntities = Object.keys(this.hass.states).filter(
-      (eid) => eid.substr(0, eid.indexOf(".")) === "sensor"
-    );*/
-
     return html`
       <div class="card-config">
         <div>
-          <paper-input label="Name" .value="${this._name}" .configValue="${" name"}" @value-changed="${this._valueChanged}">
-          </paper-input>
-          <paper-input label="Icons location" .value="${this._icons}" .configValue="${" icons"}"
-            @value-changed="${this._valueChanged}"></paper-input>
+          <paper-input
+            label="Name"
+            .value="${this._name}"
+            .configValue="${"name"}"
+            @value-changed="${this._valueChanged}"
+          ></paper-input>
+          <paper-input
+            label="Icons location"
+            .value="${this._icons}"
+            .configValue="${"icons"}"
+            @value-changed="${this._valueChanged}"
+          ></paper-input>
           <!-- Primary weather entity -->
           ${this.renderWeatherPicker("Entity", this._entity, "entity")}
           <!-- Switches -->
           <div class="switches">
             ${this.renderSwitchOption("Show current", this._current, "current")}
             ${this.renderSwitchOption("Show details", this._details, "details")}
-            ${this.renderSwitchOption("Show forecast", this._forecast, "forecast")}
             ${this.renderSwitchOption("Show hourly forecast", this._hourly_forecast, "hourly_forecast")}
+            ${this.renderSwitchOption("Show forecast", this._forecast, "forecast")}
           </div>
           <!-- -->
-          <paper-input label="Number of future forcasts" type="number" min="1" max="8" value=${this._number_of_forecasts}
-            .configValue="${" number_of_forecasts"}" @value-changed="${this._valueChanged}"></paper-input>
+          <paper-input
+            label="Number of future forcasts"
+            type="number"
+            min="1"
+            max="8"
+            value=${this._number_of_forecasts}
+            .configValue="${"number_of_forecasts"}"
+            @value-changed="${this._valueChanged}"
+          ></paper-input>
           <!-- Meteo France weather entities -->
           ${this.renderSensorPicker("Risque de pluie", this._rainChanceEntity, "rainChanceEntity")}
           ${this.renderSensorPicker("UV", this._uvEntity, "uvEntity")}
@@ -174,29 +181,47 @@ export class WeatherCardEditor extends LitElement {
   renderPicker(label, entity, configAttr, entities, domain) {
     return html`
     ${customElements.get("ha-entity-picker")
-    ? html`
-    <ha-entity-picker label="${label}" .hass="${this.hass}" .value="${entity}" .configValue="${configAttr}"
-      domain-filter="${domain}" @change="${this._valueChanged}" allow-custom-entity></ha-entity-picker>
-    `
-    : html`
-    <paper-dropdown-menu label="${label}" @value-changed="${this._valueChanged}" .configValue="${configAttr}">
-      <paper-listbox slot="dropdown-content" .selected="${entities.indexOf(this._entity)}">
-        ${entities.map((entity) => {
-        return html` <paper-item>${entity}</paper-item> `;
+        ? html`
+              <ha-entity-picker
+                label="${label}"
+                .hass="${this.hass}"
+                .value="${entity}"
+                .configValue="${configAttr}"
+                domain-filter="${domain}"
+                @change="${this._valueChanged}"
+                allow-custom-entity
+              ></ha-entity-picker>
+            `
+        : html`
+        <paper-dropdown-menu
+                  label="${label}"
+                  @value-changed="${this._valueChanged}"
+                  .configValue="${configAttr}"
+                >
+                  <paper-listbox
+                    slot="dropdown-content"
+                    .selected="${entities.indexOf(this._entity)}"
+                  >
+                    ${entities.map((entity) => {
+          return html` <paper-item>${entity}</paper-item> `;
         })}
-      </paper-listbox>
-    </paper-dropdown-menu>
-    `
-    }`
+                  </paper-listbox>
+                </paper-dropdown-menu>
+            `
+      }`
   }
 
   renderSwitchOption(label, state, configAttr) {
     return html`
       <div class="switch">
-        <ha-switch .checked=${state} .configValue="${configAttr}" @change="${this._valueChanged}"></ha-switch>
-        <span>${label}</span>
-      </div>
-      </div>
+              <ha-switch
+                .checked=${state}
+                .configValue="${configAttr}"
+                @change="${this._valueChanged}"
+              ></ha-switch
+              ><span>${label}</span>
+            </div>
+          </div>
     `
   }
 
