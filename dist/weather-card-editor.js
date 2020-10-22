@@ -66,6 +66,10 @@ export class WeatherCardEditor extends LitElement {
   }
 
   // Météo France
+  get _one_hour_forecast() {
+    return this._config.one_hour_forecast !== false;
+  }
+
   get _alertEntity() {
     return this._config.alertEntity || "";
   }
@@ -96,18 +100,6 @@ export class WeatherCardEditor extends LitElement {
 
   get _uvEntity() {
     return this._config.uvEntity || "";
-  }
-
-  get weatherEntities() {
-    return Object.keys(this.hass.states).filter(
-      (eid) => eid.substr(0, eid.indexOf(".")) === "weather"
-    );
-  }
-
-  get sensorEntities() {
-    return Object.keys(this.hass.states).filter(
-      (eid) => eid.substr(0, eid.indexOf(".")) === "sensor"
-    );
   }
 
   firstUpdated() {
@@ -144,6 +136,7 @@ export class WeatherCardEditor extends LitElement {
           <div class="switches">
             ${this.renderSwitchOption("Show current", this._current, "current")}
             ${this.renderSwitchOption("Show details", this._details, "details")}
+            ${this.renderSwitchOption("Show one hour forecast", this._one_hour_forecast, "one_hour_forecast")}
             ${this.renderSwitchOption("Show hourly forecast", this._hourly_forecast, "hourly_forecast")}
             ${this.renderSwitchOption("Show forecast", this._forecast, "forecast")}
           </div>
@@ -170,19 +163,17 @@ export class WeatherCardEditor extends LitElement {
     `;
   }
 
-  renderSensorPicker(label, entity, configAttr) {
-    return this.renderPicker(label, entity, configAttr, this.sensorEntities, "sensor");
-  }
-
   renderWeatherPicker(label, entity, configAttr) {
-    return this.renderPicker(label, entity, configAttr, this.weatherEntities, "weather");
+    return this.renderPicker(label, entity, configAttr, "weather");
   }
 
-  renderPicker(label, entity, configAttr, entities, domain) {
+  renderSensorPicker(label, entity, configAttr) {
+    return this.renderPicker(label, entity, configAttr, "sensor");
+  }
+
+  renderPicker(label, entity, configAttr, domain) {
     return html`
-    ${customElements.get("ha-entity-picker")
-        ? html`
-              <ha-entity-picker
+                                      <ha-entity-picker
                 label="${label}"
                 .hass="${this.hass}"
                 .value="${entity}"
@@ -192,23 +183,6 @@ export class WeatherCardEditor extends LitElement {
                 allow-custom-entity
               ></ha-entity-picker>
             `
-        : html`
-        <paper-dropdown-menu
-                  label="${label}"
-                  @value-changed="${this._valueChanged}"
-                  .configValue="${configAttr}"
-                >
-                  <paper-listbox
-                    slot="dropdown-content"
-                    .selected="${entities.indexOf(this._entity)}"
-                  >
-                    ${entities.map((entity) => {
-          return html` <paper-item>${entity}</paper-item> `;
-        })}
-                  </paper-listbox>
-                </paper-dropdown-menu>
-            `
-      }`
   }
 
   renderSwitchOption(label, state, configAttr) {

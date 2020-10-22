@@ -150,8 +150,8 @@ class WeatherCard extends LitElement {
       <ha-card @click="${this._handleClick}">
         ${this._config.current ? this.renderCurrent(stateObj) : ""}
         ${this._config.details ? this.renderDetails(stateObj) : ""}
-        ${this._config.hourly_forecast
-        ? this.renderHourlyForecast()
+        ${this._config.one_hour_forecast
+        ? this.renderOneHourForecast()
         : ""}
         ${this._config.alertEntity
         ? this.renderAlertForecast()
@@ -248,7 +248,7 @@ class WeatherCard extends LitElement {
     `
   }
 
-  renderHourlyForecast() {
+  renderOneHourForecast() {
     const rainForecast = this.hass.states[this._config.rainForecastEntity];
 
     if (!rainForecast || rainForecast.length === 0) {
@@ -258,9 +258,9 @@ class WeatherCard extends LitElement {
     this.numberElements++;
 
     return html`
-      <ul class="hourly">
+      <ul class="oneHour">
         ${html`
-        ${this.getHourlyForecast(rainForecast).map(
+        ${this.getOneHourForecast(rainForecast).map(
       (forecast) => html`
       <li style="opacity: ${forecast[1]}" title="${forecast[2] + " " + (forecast[0] == 0
           ? " actuellement"
@@ -350,13 +350,18 @@ class WeatherCard extends LitElement {
           (daily) => html`
         <div class="day">
           <div class="dayname">
-            ${new Date(daily.datetime).toLocaleDateString(lang, {
-            weekday: "short",
-          })}
+            ${this._config.hourly_forecast
+              ? new Date(daily.datetime).toLocaleTimeString(lang, {
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+              : new Date(daily.datetime).toLocaleDateString(lang, {
+                weekday: "short",
+              })}
           </div>
           <i class="icon" style="background: none, url('${this.getWeatherIcon(
-            daily.condition.toLowerCase()
-          )}') no-repeat; background-size: contain"></i>
+                daily.condition.toLowerCase()
+              )}') no-repeat; background-size: contain"></i>
           <div class="highTemp">
             ${daily.temperature}${this.getUnit("temperature")}
           </div>
@@ -392,8 +397,8 @@ class WeatherCard extends LitElement {
     `;
   }
 
-  getHourlyForecast(rainForecastEntity) {
-    let rainForecastColors = new Map([
+  getOneHourForecast(rainForecastEntity) {
+    let rainForecastValues = new Map([
       ["Temps sec", 0.1],
       ["Pluie faible", 0.4],
       ["Pluie modérée", 0.7],
@@ -406,7 +411,7 @@ class WeatherCard extends LitElement {
     )) {
       if (time != undefined && time.match(/[0-9]*min/g)) {
         time = time.replace("min", "").trim();
-        rainForecastList.push([time, rainForecastColors.get(value), value]);
+        rainForecastList.push([time, rainForecastValues.get(value), value]);
       }
     }
 
@@ -657,7 +662,7 @@ class WeatherCard extends LitElement {
         width: 30%;
       }
 
-      .hourly {
+      .oneHour {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
@@ -669,18 +674,18 @@ class WeatherCard extends LitElement {
         list-style: none;
       }
 
-      .hourly li {
+      .oneHour li {
         width: 100%;
         background-color: var(--paper-item-icon-color);
         border-right: 1px solid var(--lovelace-background, var(--primary-background-color));
       }
 
-      .hourly li:first-child {
+      .oneHour li:first-child {
         border-top-left-radius: 5px;
         border-bottom-left-radius: 5px;
       }
 
-      .hourly li:last-child {
+      .oneHour li:last-child {
         border-top-right-radius: 5px;
         border-bottom-right-radius: 5px;
         border: 0;
