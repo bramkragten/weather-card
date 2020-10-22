@@ -690,6 +690,25 @@ class WeatherCard extends LitElement {
         border-bottom-right-radius: 5px;
         border: 0;
       }
+        
+      .vigilance ha-icon {
+        margin: 0px 10px 0px 0px;
+      }
+      .vigilance-list ha-icon {
+        margin: 0px;
+      }
+      .vigilance-list {
+        float: right;
+      }
+      .vigilance.jaune {
+        background-color: rgba(255,235,0,0.5);
+      }
+      .vigilance.orange {
+        background-color: rgba(255,152,0,0.5);
+      }
+      .vigilance.rouge {
+        background-color: rgba(244,67,54,0.5);
+      }
     `;
   }
 }
