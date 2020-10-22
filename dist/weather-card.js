@@ -154,6 +154,7 @@ class WeatherCard extends LitElement {
         ? this.renderOneHourForecast()
         : ""}
         ${this._config.alertEntity
+        && this._config.alert_forecast
         ? this.renderAlertForecast()
         : ""}
         ${this._config.forecast
@@ -281,52 +282,30 @@ class WeatherCard extends LitElement {
     this.numberElements++;
 
     return html`
-    ${this.getAlertForecast("Jaune", alertForecast).length > 0
-        ? html`
-    <span class="vigilance jaune">
-      <ha-icon icon="mdi:alert"></ha-icon>Vigilance jaune en cours
+      ${this.renderAlertType("Rouge", alertForecast)}
+      ${this.renderAlertType("Orange", alertForecast)}
+      ${this.renderAlertType("Jaune", alertForecast)}`;
+  }
+
+  renderAlertType(level, alertForecast) {
+    const alerts = this.getAlertForecast(level, alertForecast);
+
+    if (alerts.length == 0)
+      return html``
+
+    let lclevel = level.toLowerCase();
+
+    return html`
+    <span class="vigilance ${lclevel}">
+      <ha-icon icon="mdi:alert"></ha-icon>Vigilance ${lclevel} en cours
       <div class="vigilance-list">
-        ${this.getAlertForecast("Jaune", alertForecast).map(
-          (phenomenon) => html`
+        ${this.getAlertForecast(level, alertForecast).map(
+      (phenomenon) => html`
         <ha-icon icon="${phenomenon[1]}" title="${phenomenon[0]}"></ha-icon>
         `
-        )}
+    )}
       </div>
-    </span>
-    `
-        : ""
-      }
-    ${this.getAlertForecast("Orange", alertForecast).length > 0
-        ? html`
-    <span class="vigilance orange">
-      <ha-icon icon="mdi:alert"></ha-icon>Vigilance orange en cours
-      <div class="vigilance-list">
-        ${this.getAlertForecast("Orange", alertForecast).map(
-          (phenomenon) => html`
-        <ha-icon icon="${phenomenon[1]}" title="${phenomenon[0]}"></ha-icon>
-        `
-        )}
-      </div>
-    </span>
-    `
-        : ""
-      }
-    ${this.getAlertForecast("Rouge", alertForecast).length > 0
-        ? html`
-    <span class="vigilance rouge">
-      <ha-icon icon="mdi:alert"></ha-icon>Vigilance rouge en cours
-      <div class="vigilance-list">
-        ${this.getAlertForecast("Rouge", alertForecast).map(
-          (phenomenon) => html`
-        <ha-icon icon="${phenomenon[1]}" title="${phenomenon[0]}"></ha-icon>
-        `
-        )}
-      </div>
-    </span>
-    `
-        : ""
-      }
-    `;
+    </span>`
   }
 
   renderForecast(forecast) {
@@ -347,54 +326,56 @@ class WeatherCard extends LitElement {
             : 5
         )
         .map(
-          (daily) => html`
+          (daily) => this.renderDailyForecast(daily, lang)
+        )}
+      </div>`;
+  }
+
+  renderDailyForecast(daily, lang) {
+    return html`
         <div class="day">
           <div class="dayname">
             ${this._config.hourly_forecast
-              ? new Date(daily.datetime).toLocaleTimeString(lang, {
-                hour: "2-digit",
-                minute: "2-digit",
-              })
-              : new Date(daily.datetime).toLocaleDateString(lang, {
-                weekday: "short",
-              })}
+        ? new Date(daily.datetime).toLocaleTimeString(lang, {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+        : new Date(daily.datetime).toLocaleDateString(lang, {
+          weekday: "short",
+        })}
           </div>
           <i class="icon" style="background: none, url('${this.getWeatherIcon(
-                daily.condition.toLowerCase()
-              )}') no-repeat; background-size: contain"></i>
+          daily.condition.toLowerCase()
+        )}') no-repeat; background-size: contain"></i>
           <div class="highTemp">
             ${daily.temperature}${this.getUnit("temperature")}
           </div>
           ${daily.templow !== undefined
-              ? html`
+        ? html`
           <div class="lowTemp">
             ${daily.templow}${this.getUnit("temperature")}
           </div>
           `
-              : ""}
+        : ""}
           ${!this._config.hide_precipitation &&
-              daily.precipitation !== undefined &&
-              daily.precipitation !== null
-              ? html`
+        daily.precipitation !== undefined &&
+        daily.precipitation !== null
+        ? html`
           <div class="precipitation">
             ${Math.round(daily.precipitation * 10) / 10} ${this.getUnit("precipitation")}
           </div>
           `
-              : ""}
+        : ""}
           ${!this._config.hide_precipitation &&
-              daily.precipitation_probability !== undefined &&
-              daily.precipitation_probability !== null
-              ? html`
+        daily.precipitation_probability !== undefined &&
+        daily.precipitation_probability !== null
+        ? html`
           <div class="precipitation_probability">
             ${Math.round(daily.precipitation_probability)} ${this.getUnit("precipitation_probability")}
           </div>
           `
-              : ""}
-        </div>
-        `
-        )}
-      </div>
-    `;
+        : ""}
+        </div>`;
   }
 
   getOneHourForecast(rainForecastEntity) {
@@ -690,7 +671,16 @@ class WeatherCard extends LitElement {
         border-bottom-right-radius: 5px;
         border: 0;
       }
-        
+
+      .vigilance {
+        display: block;
+        border-radius: 5px;
+        padding: 5px 10px;
+        font-weight: 600;
+        color: var(--primary -text -color);
+        margin: 2px;
+      }
+
       .vigilance ha-icon {
         margin: 0px 10px 0px 0px;
       }

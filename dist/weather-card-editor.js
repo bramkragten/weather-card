@@ -66,10 +66,16 @@ export class WeatherCardEditor extends LitElement {
   }
 
   // Météo France
+  // Switches state
   get _one_hour_forecast() {
     return this._config.one_hour_forecast !== false;
   }
 
+  get _alert_forecast() {
+    return this._config.alert_forecast !== false;
+  }
+
+  // Config value
   get _alertEntity() {
     return this._config.alertEntity || "";
   }
@@ -137,6 +143,7 @@ export class WeatherCardEditor extends LitElement {
             ${this.renderSwitchOption("Show current", this._current, "current")}
             ${this.renderSwitchOption("Show details", this._details, "details")}
             ${this.renderSwitchOption("Show one hour forecast", this._one_hour_forecast, "one_hour_forecast")}
+            ${this.renderSwitchOption("Show alert", this._alert_forecast, "alert_forecast")}
             ${this.renderSwitchOption("Show hourly forecast", this._hourly_forecast, "hourly_forecast")}
             ${this.renderSwitchOption("Show forecast", this._forecast, "forecast")}
           </div>
