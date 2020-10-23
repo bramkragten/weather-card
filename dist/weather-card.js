@@ -120,6 +120,10 @@ class WeatherCard extends LitElement {
     return hasConfigOrEntityChanged(this, changedProps);
   }
 
+  isSelected(option) {
+    return option === undefined || option === true;
+  }
+
   render() {
     if (!this._config || !this.hass) {
       return html``;
@@ -148,18 +152,20 @@ class WeatherCard extends LitElement {
 
     return html`
       <ha-card @click="${this._handleClick}">
-        ${this._config.current ? this.renderCurrent(stateObj) : ""}
-        ${this._config.details ? this.renderDetails(stateObj) : ""}
-        ${this._config.one_hour_forecast
-        ? this.renderOneHourForecast()
-        : ""}
-        ${this._config.alertEntity
-        && this._config.alert_forecast
-        ? this.renderAlertForecast()
-        : ""}
-        ${this._config.forecast
-        ? this.renderForecast(stateObj.attributes.forecast)
-        : ""}
+        ${this.isSelected(this._config.current)
+        ? this.renderCurrent(stateObj) : ""}
+
+        ${this.isSelected(this._config.details)
+        ? this.renderDetails(stateObj) : ""}
+
+        ${this.isSelected(this._config.one_hour_forecast)
+        ? this.renderOneHourForecast() : ""}
+
+        ${this.isSelected(this._config.alert_forecast)
+        ? this.renderAlertForecast() : ""}
+
+        ${this.isSelected(this._config.forecast)
+        ? this.renderForecast(stateObj.attributes.forecast) : ""}
       </ha-card>
     `;
   }
@@ -203,40 +209,44 @@ class WeatherCard extends LitElement {
         <!-- Cloudy -->
         ${this.renderMeteoFranceDetail(this.hass.states[this._config.cloudCoverEntity])}
         <!-- Wind -->
-        ${this.renderDetail(windDirections[parseInt((stateObj.attributes.wind_bearing + 11.25) / 22.5)] + " " + stateObj.attributes.wind_speed, "mdi:weather-windy",
+        ${this.renderDetail(windDirections[parseInt((stateObj.attributes.wind_bearing + 11.25) / 22.5)] + " " + stateObj.attributes.wind_speed, "Vent", "mdi:weather-windy",
       this.getUnit("speed"))}
         <!-- Rain -->
         ${this.renderMeteoFranceDetail(this.hass.states[this._config.rainChanceEntity])}
         <!-- Humidity -->
-        ${this.renderDetail(stateObj.attributes.humidity, "mdi:water-percent", "%")}
+        ${this.renderDetail(stateObj.attributes.humidity, "Humidité", "mdi:water-percent", "%")}
         <!-- Freeze -->
         ${this.renderMeteoFranceDetail(this.hass.states[this._config.freezeChanceEntity])}
         <!-- Pressure -->
-        ${this.renderDetail(stateObj.attributes.pressure, "mdi:gauge", this.getUnit("air_pressure"))}
+        ${this.renderDetail(stateObj.attributes.pressure, "Pression atmosphérique", "mdi:gauge", this.getUnit("air_pressure"))}
         <!-- Snow -->
         ${this.renderMeteoFranceDetail(this.hass.states[this._config.snowChanceEntity])}
         <!-- UV -->
         ${this.renderMeteoFranceDetail(this.hass.states[this._config.uvEntity])}
+      </ul>
+      <ul class="variations spacer">
         <!-- Sunset up -->
         ${next_rising
-        ? this.renderDetail(next_rising.toLocaleTimeString(), "mdi:weather-sunset-up")
+        ? this.renderDetail(next_rising.toLocaleTimeString(), "Heure de lever", "mdi:weather-sunset-up")
         : ""}
         <!-- Sunset down -->
         ${next_setting
-        ? this.renderDetail(next_setting.toLocaleTimeString(), "mdi:weather-sunset-down")
+        ? this.renderDetail(next_setting.toLocaleTimeString(), "Heure de coucher", "mdi:weather-sunset-down")
         : ""}
       </ul>
     `;
   }
 
   renderMeteoFranceDetail(entity) {
-    return this.renderDetail(entity.state, entity.attributes.icon, entity.attributes.unit_of_measurement)
+    return entity !== undefined
+      ? this.renderDetail(entity.state, entity.attributes.friendly_name, entity.attributes.icon, entity.attributes.unit_of_measurement)
+      : ""
   }
 
-  renderDetail(state, icon, unit) {
+  renderDetail(state, label, icon, unit) {
     return html`
       <li>
-        <ha-icon icon="${icon}"></ha-icon>
+        <ha-icon icon="${icon}" title="${label}"></ha-icon>
         ${state}
         ${unit ? html`
         <span class="unit">${unit}</span>
@@ -508,23 +518,21 @@ class WeatherCard extends LitElement {
 
       .title {
         position: absolute;
-        left: 3em;
+        left: 3.5em;
         font-weight: 300;
-        font-size: 3em;
+        font-size: 2.5em;
         color: var(--primary-text-color);
       }
-
       .temp {
         font-weight: 300;
-        font-size: 4em;
+        font-size: 3em;
         color: var(--primary-text-color);
         position: absolute;
         right: 1em;
       }
-
       .tempc {
         font-weight: 300;
-        font-size: 1.5em;
+        font-size: 1em;
         vertical-align: super;
         color: var(--primary-text-color);
         position: absolute;

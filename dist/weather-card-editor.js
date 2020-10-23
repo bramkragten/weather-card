@@ -139,14 +139,14 @@ export class WeatherCardEditor extends LitElement {
           <!-- Primary weather entity -->
           ${this.renderWeatherPicker("Entity", this._entity, "entity")}
           <!-- Switches -->
-          <div class="switches">
+          <ul class="switches">
             ${this.renderSwitchOption("Show current", this._current, "current")}
             ${this.renderSwitchOption("Show details", this._details, "details")}
             ${this.renderSwitchOption("Show one hour forecast", this._one_hour_forecast, "one_hour_forecast")}
             ${this.renderSwitchOption("Show alert", this._alert_forecast, "alert_forecast")}
             ${this.renderSwitchOption("Show hourly forecast", this._hourly_forecast, "hourly_forecast")}
             ${this.renderSwitchOption("Show forecast", this._forecast, "forecast")}
-          </div>
+          </ul>
           <!-- -->
           <paper-input
             label="Number of future forcasts"
@@ -185,7 +185,7 @@ export class WeatherCardEditor extends LitElement {
                 .hass="${this.hass}"
                 .value="${entity}"
                 .configValue="${configAttr}"
-                domain-filter="${domain}"
+                .includeDomains="${domain}"
                 @change="${this._valueChanged}"
                 allow-custom-entity
               ></ha-entity-picker>
@@ -194,7 +194,7 @@ export class WeatherCardEditor extends LitElement {
 
   renderSwitchOption(label, state, configAttr) {
     return html`
-      <div class="switch">
+      <li class="switch">
               <ha-switch
                 .checked=${state}
                 .configValue="${configAttr}"
@@ -202,7 +202,7 @@ export class WeatherCardEditor extends LitElement {
               ></ha-switch
               ><span>${label}</span>
             </div>
-          </div>
+          </li>
     `
   }
 
@@ -233,13 +233,18 @@ export class WeatherCardEditor extends LitElement {
       .switches {
         margin: 8px 0;
         display: flex;
-        justify-content: space-between;
+        flex-flow: row wrap;
+        list-style: none;
+        padding: 0;
       }
+
       .switch {
         display: flex;
         align-items: center;
-        justify-items: center;
+        width: 50%;
+        height: 40px;
       }
+
       .switches span {
         padding: 0 16px;
       }
