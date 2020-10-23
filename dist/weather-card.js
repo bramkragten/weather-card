@@ -265,7 +265,7 @@ class WeatherCard extends LitElement {
 
     this.numberElements++;
 
-    let [startTime, endTime, rainForecastList] = this.getOneHourForecast(rainForecast);
+    let [startTime, endTime] = this.getOneHourForecastTime(rainForecast);
 
     return html`
       <div>
@@ -275,7 +275,7 @@ class WeatherCard extends LitElement {
       </ul>
       <ul class="oneHour">
         ${html`
-        ${rainForecastList.map(
+        ${this.getOneHourForecast(rainForecast).map(
       (forecast) => html`
       <li class="rain-${forecast[0]}min" style="opacity: ${forecast[1]}" title="${forecast[2] + " " + (forecast[0] == 0
           ? " actuellement"
@@ -409,11 +409,6 @@ class WeatherCard extends LitElement {
       ["Pluie forte", 1],
     ]);
 
-    let rainForecastTimeRef = new Date(rainForecastEntity.attributes["forecast_time_ref"]);
-    let rainForecastStartTime = rainForecastTimeRef.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-    rainForecastTimeRef.setHours(rainForecastTimeRef.getHours() + 1);
-    let rainForecastEndTime = rainForecastTimeRef.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-
     let rainForecastList = [];
     for (let [time, value] of Object.entries(
       rainForecastEntity.attributes["1_hour_forecast"]
@@ -424,7 +419,16 @@ class WeatherCard extends LitElement {
       }
     }
 
-    return [rainForecastStartTime, rainForecastEndTime, rainForecastList];
+    return rainForecastList;
+  }
+
+  getOneHourForecastTime(rainForecastEntity) {
+    let rainForecastTimeRef = new Date(rainForecastEntity.attributes["forecast_time_ref"]);
+    let rainForecastStartTime = rainForecastTimeRef.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    rainForecastTimeRef.setHours(rainForecastTimeRef.getHours() + 1);
+    let rainForecastEndTime = rainForecastTimeRef.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+    return [rainForecastStartTime, rainForecastEndTime];
   }
 
   getAlertForecast(color, alertEntity) {
