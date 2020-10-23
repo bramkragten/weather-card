@@ -258,17 +258,31 @@ class WeatherCard extends LitElement {
     this.numberElements++;
 
     return html`
+      <div class="oneHour1">
+      <ul class="oneHourHeader">
+      <li> ${this.getOneHourForecastTime(rainForecast)[0]} </li>
+      <li> ${this.getOneHourForecastTime(rainForecast)[1]} </li>
+      </ul>
       <ul class="oneHour">
         ${html`
         ${this.getOneHourForecast(rainForecast).map(
       (forecast) => html`
-      <li style="opacity: ${forecast[1]}" title="${forecast[2] + " " + (forecast[0] == 0
+      <li class="rain-${forecast[0]}min" style="opacity: ${forecast[1]}" title="${forecast[2] + " " + (forecast[0] == 0
           ? " actuellement"
           : "dans " + forecast[0] + " min")}">
       </li>`
     )}
         `}
-      </ul>`;
+      </ul>
+      <ul class="oneHourLabel">
+      <li></li>
+      <li>10</li>
+      <li>20</li>
+      <li>30</li>
+      <li>40</li>
+      <li>50</li>
+      </ul>
+     </div>`;
   }
 
   renderAlertForecast() {
@@ -396,6 +410,14 @@ class WeatherCard extends LitElement {
     }
 
     return rainForecastList;
+  }
+
+  getOneHourForecastTime(rainForecastEntity) {
+    let rainForecastTimeRef = new Date(rainForecastEntity.attributes["forecast_time_ref"]);
+    let rainForecastStartTime = rainForecastTimeRef.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    rainForecastTimeRef.setHours(rainForecastTimeRef.getHours() + 1);
+    let rainForecastEndTime = rainForecastTimeRef.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    return [rainForecastStartTime, rainForecastEndTime];
   }
 
   getAlertForecast(color, alertEntity) {
@@ -649,7 +671,7 @@ class WeatherCard extends LitElement {
         height: 15px;
         padding: 0px;
         color: var(--primary-text-color);
-        margin: 10px 2px;
+        margin: 0px 0px 2px 2px;
         overflow: hidden;
         list-style: none;
       }
@@ -669,6 +691,48 @@ class WeatherCard extends LitElement {
         border-top-right-radius: 5px;
         border-bottom-right-radius: 5px;
         border: 0;
+      }
+
+      .rain-0min, .rain-5min, .rain-10min, .rain-15min, .rain-20min, .rain-25min {
+        flex: 1 1 0;
+      }
+
+      .rain-35min, .rain-45min, .rain-55min {
+        flex: 2 1 0;
+      }
+
+      .oneHourLabel {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        padding: 0px;
+        margin-top: 0px;
+        color: var(--primary-text-color);
+        overflow: hidden;
+        list-style: none;
+      }
+
+      .oneHourLabel li {
+        flex: 1 1 0;
+      }
+
+      .oneHourHeader {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        padding: 0px;
+        margin-bottom: 0px;
+        color: var(--primary-text-color);
+        overflow: hidden;
+        list-style: none;
+      }
+
+      .oneHourHeader li {
+        flex: 1 1 0;
+      }
+
+      .oneHourHeader li:last-child {
+        text-align:right;
       }
 
       .vigilance {
