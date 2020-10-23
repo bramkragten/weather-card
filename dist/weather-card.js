@@ -255,15 +255,17 @@ class WeatherCard extends LitElement {
 
     this.numberElements++;
 
+    let [startTime, endTime, rainForecastList] = this.getOneHourForecast(rainForecast);
+
     return html`
-      <div class="oneHour1">
+      <div>
       <ul class="oneHourHeader">
-      <li> ${this.getOneHourForecastTime(rainForecast)[0]} </li>
-      <li> ${this.getOneHourForecastTime(rainForecast)[1]} </li>
+      <li> ${startTime} </li>
+      <li> ${endTime} </li>
       </ul>
       <ul class="oneHour">
         ${html`
-        ${this.getOneHourForecast(rainForecast).map(
+        ${rainForecastList.map(
       (forecast) => html`
       <li class="rain-${forecast[0]}min" style="opacity: ${forecast[1]}" title="${forecast[2] + " " + (forecast[0] == 0
           ? " actuellement"
@@ -397,6 +399,11 @@ class WeatherCard extends LitElement {
       ["Pluie forte", 1],
     ]);
 
+    let rainForecastTimeRef = new Date(rainForecastEntity.attributes["forecast_time_ref"]);
+    let rainForecastStartTime = rainForecastTimeRef.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    rainForecastTimeRef.setHours(rainForecastTimeRef.getHours() + 1);
+    let rainForecastEndTime = rainForecastTimeRef.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
     let rainForecastList = [];
     for (let [time, value] of Object.entries(
       rainForecastEntity.attributes["1_hour_forecast"]
@@ -407,15 +414,7 @@ class WeatherCard extends LitElement {
       }
     }
 
-    return rainForecastList;
-  }
-
-  getOneHourForecastTime(rainForecastEntity) {
-    let rainForecastTimeRef = new Date(rainForecastEntity.attributes["forecast_time_ref"]);
-    let rainForecastStartTime = rainForecastTimeRef.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-    rainForecastTimeRef.setHours(rainForecastTimeRef.getHours() + 1);
-    let rainForecastEndTime = rainForecastTimeRef.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-    return [rainForecastStartTime, rainForecastEndTime];
+    return [rainForecastStartTime, rainForecastEndTime, rainForecastList];
   }
 
   getAlertForecast(color, alertEntity) {
