@@ -39,13 +39,13 @@ const windDirections = [
   "SE",
   "SSE",
   "S",
-  "SSW",
-  "SW",
-  "WSW",
-  "W",
-  "WNW",
-  "NW",
-  "NNW",
+  "SSO",
+  "SO",
+  "OSO",
+  "O",
+  "ONO",
+  "NO",
+  "NNO",
   "N",
 ];
 
@@ -200,23 +200,21 @@ class WeatherCard extends LitElement {
 
     return html`
       <ul class="variations ${this.numberElements > 1 ? " spacer" : ""}">
-        <!-- Humidity -->
-        ${this.renderDetail(stateObj.attributes.humidity, "mdi:water-percent", "%")}
-        <!-- Wind -->
-        ${this.renderDetail((stateObj.attributes.wind_bearing == undefined ? "" : windDirections[parseInt((stateObj.attributes.wind_bearing + 11.25) / 22.5)] + " ") + stateObj.attributes.wind_speed, "mdi:weather-windy", this.getUnit("speed"))}
-        <!-- Pressure -->
-        ${this.renderDetail(stateObj.attributes.pressure, "mdi:gauge", this.getUnit("air_pressure"))}
-        <!-- Fog -->
-        ${this.renderDetail(stateObj.attributes.visibility, "mdi:weather-fog", this.getUnit("length"))}
-        <!-- Meteo France sensors -->
         <!-- Cloudy -->
         ${this.renderMeteoFranceDetail(this.hass.states[this._config.cloudCoverEntity])}
+        <!-- Wind -->
+        ${this.renderDetail(windDirections[parseInt((stateObj.attributes.wind_bearing + 11.25) / 22.5)] + " " + stateObj.attributes.wind_speed, "mdi:weather-windy",
+      this.getUnit("speed"))}
         <!-- Rain -->
         ${this.renderMeteoFranceDetail(this.hass.states[this._config.rainChanceEntity])}
-        <!-- Snow -->
-        ${this.renderMeteoFranceDetail(this.hass.states[this._config.snowChanceEntity])}
+        <!-- Humidity -->
+        ${this.renderDetail(stateObj.attributes.humidity, "mdi:water-percent", "%")}
         <!-- Freeze -->
         ${this.renderMeteoFranceDetail(this.hass.states[this._config.freezeChanceEntity])}
+        <!-- Pressure -->
+        ${this.renderDetail(stateObj.attributes.pressure, "mdi:gauge", this.getUnit("air_pressure"))}
+        <!-- Snow -->
+        ${this.renderMeteoFranceDetail(this.hass.states[this._config.snowChanceEntity])}
         <!-- UV -->
         ${this.renderMeteoFranceDetail(this.hass.states[this._config.uvEntity])}
         <!-- Sunset up -->
