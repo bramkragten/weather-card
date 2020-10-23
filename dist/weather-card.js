@@ -203,8 +203,7 @@ class WeatherCard extends LitElement {
         <!-- Humidity -->
         ${this.renderDetail(stateObj.attributes.humidity, "mdi:water-percent", "%")}
         <!-- Wind -->
-        ${this.renderDetail(windDirections[parseInt((stateObj.attributes.wind_bearing + 11.25) / 22.5)] + " " + stateObj.attributes.wind_speed, "mdi:weather-windy",
-      this.getUnit("speed"))}
+        ${this.renderDetail((stateObj.attributes.wind_bearing == undefined ? "" : windDirections[parseInt((stateObj.attributes.wind_bearing + 11.25) / 22.5)] + " ") + stateObj.attributes.wind_speed, "mdi:weather-windy", this.getUnit("speed"))}
         <!-- Pressure -->
         ${this.renderDetail(stateObj.attributes.pressure, "mdi:gauge", this.getUnit("air_pressure"))}
         <!-- Fog -->
