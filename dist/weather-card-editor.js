@@ -24,6 +24,15 @@ const css = LitElement.prototype.css;
 
 const HELPERS = window.loadCardHelpers();
 
+const DefaultSensors = new Map([
+  ["cloudCoverEntity", "_cloud_cover"],
+  ["rainChanceEntity", "_rain_chance"],
+  ["freezeChanceEntity", "_freeze_chance"],
+  ["snowChanceEntity", "_snow_chance"],
+  ["uvEntity", "_uv"],
+  ["rainForecastEntity", "_next_rain"]
+])
+
 export class WeatherCardEditor extends LitElement {
   setConfig(config) {
     this._config = { ...config };
@@ -98,10 +107,6 @@ export class WeatherCardEditor extends LitElement {
 
   get _snowChanceEntity() {
     return this._config.snowChanceEntity || "";
-  }
-
-  get _thunderChanceEntity() {
-    return this._config.thunderChanceEntity || "";
   }
 
   get _uvEntity() {
@@ -206,6 +211,19 @@ export class WeatherCardEditor extends LitElement {
     `
   }
 
+  _weatherEntityChanged(entityName) {
+    DefaultSensors.forEach(
+      (sensorSuffix, configAttribute) => {
+        const entity = "sensor." + entityName + sensorSuffix;
+        if (this.hass.states[entity] !== undefined)
+          this._config = {
+            ...this._config,
+            [configAttribute]: entity,
+          };
+      }
+    )
+  }
+
   _valueChanged(ev) {
     if (!this._config || !this.hass) {
       return;
@@ -218,6 +236,8 @@ export class WeatherCardEditor extends LitElement {
       if (target.value === "") {
         delete this._config[target.configValue];
       } else {
+        if (target.configValue === "entity")
+          this._weatherEntityChanged(target.value.split('.')[1]);
         this._config = {
           ...this._config,
           [target.configValue]:
