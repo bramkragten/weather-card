@@ -206,8 +206,6 @@ class WeatherCard extends LitElement {
         ${this.renderDetail((stateObj.attributes.wind_bearing == undefined ? "" : windDirections[parseInt((stateObj.attributes.wind_bearing + 11.25) / 22.5)] + " ") + stateObj.attributes.wind_speed, "mdi:weather-windy", this.getUnit("speed"))}
         <!-- Pressure -->
         ${this.renderDetail(stateObj.attributes.pressure, "mdi:gauge", this.getUnit("air_pressure"))}
-        <!-- Fog -->
-        ${this.renderDetail(stateObj.attributes.visibility, "mdi:weather-fog", this.getUnit("length"))}
         <!-- Meteo France sensors -->
         <!-- Cloudy -->
         ${this.renderMeteoFranceDetail(this.hass.states[this._config.cloudCoverEntity])}
