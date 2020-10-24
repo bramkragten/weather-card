@@ -272,4 +272,4 @@ export class MeteofranceWeatherCardEditor extends LitElement {
   }
 }
 
-customElements.define("weather-card-editor", WeatherCardEditor);
+customElements.define("meteofrance-weather-card-editor", MeteofranceWeatherCardEditor);
