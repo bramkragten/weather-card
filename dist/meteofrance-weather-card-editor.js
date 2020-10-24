@@ -33,7 +33,7 @@ const DefaultSensors = new Map([
   ["rainForecastEntity", "_next_rain"]
 ])
 
-export class WeatherCardEditor extends LitElement {
+export class MeteofranceWeatherCardEditor extends LitElement {
   setConfig(config) {
     this._config = { ...config };
   }
