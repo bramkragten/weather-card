@@ -52,10 +52,10 @@ const windDirections = [
 window.customCards = window.customCards || [];
 window.customCards.push({
   type: "weather-card",
-  name: "Weather Card",
-  description: "A custom weather card with animated icons.",
+  name: "Carte Météo France",
+  description: "Carte pour l'intégration Météo France.",
   preview: true,
-  documentationURL: "https://github.com/bramkragten/weather-card",
+  documentationURL: "https://github.com/dx44/meteofrance-weather-card",
 });
 
 const fireEvent = (node, type, detail, options) => {
@@ -424,9 +424,9 @@ class WeatherCard extends LitElement {
 
   getOneHourForecastTime(rainForecastEntity) {
     let rainForecastTimeRef = new Date(rainForecastEntity.attributes["forecast_time_ref"]);
-    let rainForecastStartTime = rainForecastTimeRef.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    let rainForecastStartTime = rainForecastTimeRef.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     rainForecastTimeRef.setHours(rainForecastTimeRef.getHours() + 1);
-    let rainForecastEndTime = rainForecastTimeRef.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    let rainForecastEndTime = rainForecastTimeRef.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
     return [rainForecastStartTime, rainForecastEndTime];
   }
