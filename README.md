@@ -28,24 +28,3 @@ type: 'custom:meteofrance-weather-card'
 Cela renseignera automatique les différents sensor, il vous faudra renseigner Vigilance Météo par le sensor vigilance de votre région.
 
 ![reglages_graph](https://github.com/Axellum/weather-card/blob/Meteo-France/reglages_graph.png?raw=true)
-
-  -Manuel:
-```yaml
-current: true
-entity: weather.VotreVille
-type: 'custom:meteofrance-weather-card'
-number_of_forecasts: '5'
-name: VotreVille
-hourly_forecast: false
-forecast: true
-details: true
-rainChanceEntity: sensor.VotreVille_rain_chance
-uvEntity: sensor.VotreVille_uv
-cloudCoverEntity: sensor.VotreVille_cloud_cover
-freezeChanceEntity: sensor.VotreVille_freeze_chance
-snowChanceEntity: sensor.VotreVille_snow_chance
-alertEntity: sensor.VotreRegion_weather_alert
-rainForecastEntity: sensor.VotreVille_next_rain
-one_hour_forecast: true
-alert_forecast: true
-```
