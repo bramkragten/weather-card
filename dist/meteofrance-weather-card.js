@@ -88,7 +88,7 @@ function hasConfigOrEntityChanged(element, changedProps) {
   return true;
 }
 
-class WeatherCard extends LitElement {
+class MeteofranceWeatherCard extends LitElement {
   static get properties() {
     return {
       _config: {},
@@ -774,4 +774,4 @@ class WeatherCard extends LitElement {
     `;
   }
 }
-customElements.define("weather-card", WeatherCard);
+customElements.define("meteofrance-weather-card", MeteofranceWeatherCard);
