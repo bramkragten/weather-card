@@ -66,10 +66,6 @@ export class MeteofranceWeatherCardEditor extends LitElement {
     return this._config.forecast !== false;
   }
 
-  get _hourly_forecast() {
-    return this._config.hourly_forecast !== false;
-  }
-
   get _number_of_forecasts() {
     return this._config.number_of_forecasts || 5;
   }
@@ -149,7 +145,6 @@ export class MeteofranceWeatherCardEditor extends LitElement {
             ${this.renderSwitchOption("Show details", this._details, "details")}
             ${this.renderSwitchOption("Show one hour forecast", this._one_hour_forecast, "one_hour_forecast")}
             ${this.renderSwitchOption("Show alert", this._alert_forecast, "alert_forecast")}
-            ${this.renderSwitchOption("Show hourly forecast", this._hourly_forecast, "hourly_forecast")}
             ${this.renderSwitchOption("Show forecast", this._forecast, "forecast")}
           </ul>
           <!-- -->

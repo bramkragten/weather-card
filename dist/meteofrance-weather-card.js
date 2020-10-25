@@ -337,6 +337,7 @@ class MeteofranceWeatherCard extends LitElement {
     }
 
     const lang = this.hass.selectedLanguage || this.hass.language;
+    const isDaily = this.isDailyForecast(forecast);
 
     this.numberElements++;
     return html`
@@ -349,22 +350,27 @@ class MeteofranceWeatherCard extends LitElement {
             : 5
         )
         .map(
-          (daily) => this.renderDailyForecast(daily, lang)
+          (daily) => this.renderDailyForecast(daily, lang, isDaily)
         )}
       </div>`;
   }
 
-  renderDailyForecast(daily, lang) {
+  isDailyForecast(forecast) {
+    const diff = new Date(forecast[1].datetime) - new Date(forecast[0].datetime);
+    return diff > 3600000;
+  }
+
+  renderDailyForecast(daily, lang, isDaily) {
     return html`
         <div class="day">
           <div class="dayname">
-            ${this._config.hourly_forecast
-        ? new Date(daily.datetime).toLocaleTimeString(lang, {
+            ${isDaily
+        ? new Date(daily.datetime).toLocaleDateString(lang, {
+          weekday: "short",
+        })
+        : new Date(daily.datetime).toLocaleTimeString(lang, {
           hour: "2-digit",
           minute: "2-digit",
-        })
-        : new Date(daily.datetime).toLocaleDateString(lang, {
-          weekday: "short",
         })}
           </div>
           <i class="icon" style="background: none, url('${this.getWeatherIcon(
