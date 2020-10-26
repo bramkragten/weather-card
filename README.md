@@ -8,12 +8,6 @@ Projet reprit de https://github.com/Imbuzi/meteo-france-weather-card, pour une a
 
 Ajoutez l'adresse https://github.com/hacf-fr/lovelace-meteofrance-weather-card dans "Custom repositories" sur HACS, "Category": "Lovelace".
 
-Ajouter dans "Configuration" / "Tableaux de bord Lovelace" / "Ressources" l'adresse de la carte:
-
-```yaml
-/hacsfiles/lovelace-meteofrance-weather-card/meteofrance-weather-card.js
-```
-
 ## Configuration:
 
 1/ Ajouter une carte manuel.
