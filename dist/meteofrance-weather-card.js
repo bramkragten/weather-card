@@ -472,7 +472,7 @@ class MeteofranceWeatherCard extends LitElement {
   getWeatherIcon(condition, sun) {
     return `${this._config.icons
       ? this._config.icons
-      : "https://cdn.jsdelivr.net/gh/bramkragten/weather-card/dist/icons/"
+      : "/local/community/lovelace-meteofrance-weather-card/icons/"
       }${sun && sun.state == "below_horizon"
         ? weatherIconsNight[condition]
         : weatherIconsDay[condition]
