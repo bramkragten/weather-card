@@ -52,10 +52,10 @@ const windDirections = [
 window.customCards = window.customCards || [];
 window.customCards.push({
   type: "weather-card",
-  name: "Carte Météo France",
+  name: "Carte Météo France par HACF",
   description: "Carte pour l'intégration Météo France.",
   preview: true,
-  documentationURL: "https://github.com/dx44/meteofrance-weather-card",
+  documentationURL: "https://github.com/hacf-fr/lovelace-meteofrance-weather-card",
 });
 
 const fireEvent = (node, type, detail, options) => {
