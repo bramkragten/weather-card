@@ -51,7 +51,7 @@ const windDirections = [
 
 window.customCards = window.customCards || [];
 window.customCards.push({
-  type: "weather-card",
+  type: "meteofrance-weather-card",
   name: "Carte Météo France par HACF",
   description: "Carte pour l'intégration Météo France.",
   preview: true,
