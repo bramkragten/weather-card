@@ -38,4 +38,4 @@ La carte est disponible dans la liste des cartes personnalisées pour être ajou
 
 7. `Enregistrer` votre configuration.
 
-![Weather Card Configuration](https://github.com/hacf-fr/lovelace-meteofrance-weather-card/blob/Readme/meteofrance-weather-card-editor.png)
+![Weather Card Configuration](https://github.com/hacf-fr/lovelace-meteofrance-weather-card/blob/Meteo-France/meteofrance-weather-card-editor.png)
