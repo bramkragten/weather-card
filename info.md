@@ -1,77 +1,41 @@
-# Lovelace animated weather card
+# Carte Lovelace Météo France
 
-Originally created for the [old UI](https://community.home-assistant.io/t/custom-ui-weather-state-card-with-a-question/23008) converted by @arsaboo and @ciotlosm to [Lovelace](https://community.home-assistant.io/t/custom-ui-weather-state-card-with-a-question/23008/291) and now converted to Lit to make it even better.
+Projet reprit de https://github.com/Imbuzi/meteo-france-weather-card, pour une adaptation de la carte https://github.com/bramkragten/weather-card dédié à Météo France.
 
-This card uses the awesome [animated SVG weather icons by amCharts](https://www.amcharts.com/free-animated-svg-weather-icons/).
+![Weather Card](https://github.com/hacf-fr/lovelace-meteofrance-weather-card/blob/Meteo-France/meteofrance-weather-card.png)
 
-![Weather Card](https://github.com/bramkragten/custom-ui/blob/master/weather-card/weather-card.gif?raw=true)
+## Prérequis
 
-Thanks for all picking this card up.
+Cette carte est prévue pour utiliser les entités de l'intégration [Météo France](https://www.home-assistant.io/integrations/meteo_france/).
 
-## Installation:
+## Installation
 
-### If you are using Firefox:
+1. Depuis [HACS](https://hacs.xyz/) (Home Assistant Community Store), ouvrez le menu en haut à droite et utiliser l'option "`Custom repositories`" pour ajouter le dépôt de la carte.
 
-Firefox < 66 does not support all the needed functions yet for the editor.
-You change this by enabling `javascript.options.dynamicImport` in `about:config`.
+2. Ajoutez l'adresse https://github.com/hacf-fr/lovelace-meteofrance-weather-card avec pour catégorie "`Lovelace`", et faire "`ADD`". Le dépôt de la carte apparaît dans la liste.
 
-Add the following to resources in your lovelace config:
+3. Sélectionner ce dépôt (cette présentation de la carte va s'afficher dans une fenêtre) et utiliser l'option "`INSTALL THIS REPOSITORY`" en bas à droite de la fenêtre.
 
-```yaml
-resources:
-  - url: /hacsfiles/weather-card/weather-card.js
-    type: module
-```
+4. Laisser le choix de la dernière version et utiliser l'option "`INSTALL`" en bas à droite.
 
-## Configuration:
+5. Faire "`RELOAD`" pour terminer!
 
-And add a card with type `custom:weather-card`:
+## Configuration
 
-```yaml
-- type: custom:weather-card
-  entity: weather.yourweatherentity
-  name: Optional name
-```
+La carte est disponible dans la liste des cartes personnalisées pour être ajouté à votre tableau de bord. Une fois choisie, sa configuration est la suivante :
 
-If you want to use your local icons add the location to the icons:
+1. **Définir un nom** pour la carte (généralement la ville, comme pour l'intégration)
 
-```yaml
-- type: custom:weather-card
-  entity: weather.yourweatherentity
-  icons: "/community_plugin/weather-card/icons/"
-```
+2. **Sélectionner l'entité météo** que vous avez définit avec l'intégration (par défaut la carte en choisie une mais ce n'est pas forcément l'entité météo france que vous avez configuré)
 
-You can choose wich elements of the weather card you want to show:
+3. Toutes **les autres entités sont automatiquement définies** mais vous pouvez les redéfinir à votre guise.
 
-The 3 different rows, being:
+4. Seule l'entité pour les **alertes est à préciser manuellement**.
 
-- The current weather icon, the current temperature and title
-- The details about the current weather
-- The 5 day forecast
+5. **Sélectionner les parties** de la carte **à afficher** (vous pouvez ainsi avoir plusieurs cartes avec des affichages différents).
 
-```yaml
-type: custom:weather-card
-entity: weather.yourweatherentity
-current: true
-details: false
-forecast: true
-```
+6. **Préciser le nombre de jours de prévision** à afficher en bas de carte.
 
-If you want to show the sunrise and sunset times, make sure the `sun` component is enabled:
+7. `Enregistrer` votre configuration.
 
-```yaml
-# Example configuration.yaml entry
-sun:
-```
-
-### Dark Sky:
-
-When using Dark Sky you should put the mode to `daily` if you want a daily forecast with highs and lows.
-
-```yaml
-# Example configuration.yaml entry
-weather:
-  - platform: darksky
-    api_key: YOUR_API_KEY
-    mode: daily
-```
+![Weather Card Configuration](https://github.com/hacf-fr/lovelace-meteofrance-weather-card/blob/Readme/meteofrance-weather-card-editor.png)
