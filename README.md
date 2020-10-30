@@ -1,5 +1,7 @@
 # Carte Lovelace Météo France
 
+[![HACS: Custom](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ## Sommaire
 
 1. [Contexte](#Contexte)
