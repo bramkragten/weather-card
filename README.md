@@ -1,5 +1,15 @@
 # Carte Lovelace Météo France
 
+## Sommaire
+
+1. [Contexte](#Contexte)
+2. [Prérequis](#Prérequis)
+3. [Installation via l'interface utilisateur](#Installation-via-l'interface-utilisateur)
+4. [Installation manuelle (utilisateurs avancés)](<#Installation-manuelle-(utilisateurs-avancés)>)
+5. [FAQ](#FAQ)
+
+## Contexte
+
 Projet reprit de <https://github.com/Imbuzi/meteo-france-weather-card>, pour une adaptation de la carte <https://github.com/bramkragten/weather-card> dédié à Météo France.
 
 ![Weather Card](https://github.com/hacf-fr/lovelace-meteofrance-weather-card/blob/Meteo-France/meteofrance-weather-card.png)
@@ -26,11 +36,11 @@ Cette carte est prévue pour utiliser les entités de l'intégration [Météo Fr
 
 Vous trouverez la carte dans la liste des cartes personnalisées (en fin de liste) et avec pour nom `Carte Météo France par HACF`.
 
-Une fois choisie, sa configuration est la suivante :
+Une fois choisi, sa configuration est la suivante :
 
 1. **Définir un nom** pour la carte (généralement la ville, comme pour l'intégration).
 
-2. **Sélectionner l'entité météo** que vous avez définit avec l'intégration (par défaut la carte en choisie une mais ce n'est pas forcément l'entité météo france que vous avez configuré).
+2. **Sélectionner l'entité météo** que vous avez définit avec l'intégration (par défaut la carte en choisit une mais ce n'est pas forcément l'entité météo france que vous avez configuré).
 
 3. Toutes les autres entités **sont automatiquement définies** mais vous pouvez les redéfinir ou les supprimer à votre guise.
 
@@ -54,7 +64,7 @@ La configuration se fait par défaut dans le fichier `ui-lovelace.yml` dans le d
 
 ### Prérequis
 
-Vous devez avoir accès au système de fichiers de HA. Plusieurs méthodes possible, soit par SSH, soit via l'addon Samba par exemple.
+Vous devez avoir accès au système de fichiers de HA. Plusieurs méthodes possibles, soit par SSH, soit via l'addon Samba par exemple.
 
 ### Installation de la carte
 
@@ -111,4 +121,4 @@ view:
 
   **Réponse**: Valider bien que la ville que vous avez configuré dans l'intégration Météo France soit dans une région où ce type d'information est disponible. Consulter [cette carte](https://meteo.orange.fr/previsions-pluie/) sur le site de météo France.
 
-  Vous pouvez également valider, depuis la page `Outils de développement > Etats` de HA, que l'entité `sensor.maville_next_rain` retour des informations prévisionnelles de pluie dans l'heure.
+  Vous pouvez également valider, depuis la page `Outils de développement > Etats` de HA, que l'entité `sensor.maville_next_rain` retourne des informations prévisionnelles de pluie dans l'heure.
