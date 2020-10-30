@@ -297,7 +297,7 @@ class WeatherCard extends LitElement {
                       </div>
                     `
                   : ""}
-                ${!this._config.hide_precipitation_probability &&
+                ${(!this._config.hide_precipitation || !this._config.hide_precipitation_probability) &&
                 daily.precipitation_probability !== undefined &&
                 daily.precipitation_probability !== null
                   ? html`
