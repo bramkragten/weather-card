@@ -1,6 +1,6 @@
 # Carte Lovelace Météo France
 
-Projet reprit de https://github.com/Imbuzi/meteo-france-weather-card, pour une adaptation de la carte https://github.com/bramkragten/weather-card dédié à Météo France.
+Projet reprit de <https://github.com/Imbuzi/meteo-france-weather-card>, pour une adaptation de la carte <https://github.com/bramkragten/weather-card> dédié à Météo France.
 
 ![Weather Card](https://github.com/hacf-fr/lovelace-meteofrance-weather-card/blob/Meteo-France/meteofrance-weather-card.png)
 
@@ -14,17 +14,19 @@ Cette carte est prévue pour utiliser les entités de l'intégration [Météo Fr
 
 1. Depuis [HACS](https://hacs.xyz/) (Home Assistant Community Store), ouvrez le menu en haut à droite et utiliser l'option `Custom repositories` pour ajouter le dépôt de la carte.
 
-2. Ajoutez l'adresse https://github.com/hacf-fr/lovelace-meteofrance-weather-card avec pour catégorie `Lovelace`, et faire `ADD`. Le dépôt de la carte apparaît dans la liste.
+2. Ajoutez l'adresse <https://github.com/hacf-fr/lovelace-meteofrance-weather-card> avec pour catégorie `Lovelace`, et faire `ADD`. Le dépôt de la carte apparaît dans la liste.
 
 3. Sélectionner ce dépôt (cette présentation de la carte va s'afficher dans une fenêtre) et utiliser l'option `INSTALL THIS REPOSITORY` en bas à droite de la fenêtre.
 
 4. Laisser le choix de la dernière version et utiliser l'option `INSTALL` en bas à droite.
 
-5. Faire `RELOAD` pour terminer!
+5. Faire `RELOAD` pour terminer! La carte est maintenant prête à être utiliser dans votre tableau de bord.
 
 ### Configuration
 
-La carte est disponible dans la liste des cartes personnalisées pour être ajouté à votre tableau de bord. Une fois choisie, sa configuration est la suivante :
+Vous trouverez la carte dans la liste des cartes personnalisées (en fin de liste) et avec pour nom `Carte Météo France par HACF`.
+
+Une fois choisie, sa configuration est la suivante :
 
 1. **Définir un nom** pour la carte (généralement la ville, comme pour l'intégration).
 
@@ -64,17 +66,17 @@ Vous devez avoir accès au système de fichiers de HA. Plusieurs méthodes possi
 
 4. Maintenant depuis votre interface HA, allez dans `Configuration > Lovelace Dashboard > Resources` et créer une ressource de type `JavaScript Module` et pour url `/local/community/lovelace-meteofrance-weather-card/meteofrance-weather-card.js`.
 
-   <u>OU BIEN</u> éditer votre fichier `ui_lovelace.yml` pour ajouter la ressource comme ceci :
+   **_OU BIEN_** éditer votre fichier `ui_lovelace.yml` pour ajouter la ressource comme ceci :
 
-```yaml
-lovelace:
-  mode: yaml
-  resources:
-    - url: /local/community/lovelace-meteofrance-weather-card/meteofrance-weather-card.js
-      type: module
-```
+   ```yaml
+   lovelace:
+     mode: yaml
+     resources:
+       - url: /local/community/lovelace-meteofrance-weather-card/meteofrance-weather-card.js
+         type: module
+   ```
 
-6. Rafraichir votre navigateur avec CTRL+F5.
+5. Rafraichir votre navigateur avec CTRL+F5.
 
 ### Configuration via YAML
 
@@ -102,3 +104,11 @@ view:
         alert_forecast: true
         forecast: true
 ```
+
+## FAQ
+
+- **Question**: La prévision de pluie dans l'heure ne semble pas fonctionner, les cases sont toujours de la même couleur bien que le temps est changeant et pluvieux.
+
+  **Réponse**: Valider bien que la ville que vous avez configuré dans l'intégration Météo France soit dans une région où ce type d'information est disponible. Consulter [cette carte](https://meteo.orange.fr/previsions-pluie/) sur le site de météo France.
+
+  Vous pouvez également valider, depuis la page `Outils de développement > Etats` de HA, que l'entité `sensor.maville_next_rain` retour des informations prévisionnelles de pluie dans l'heure.
