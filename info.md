@@ -2,27 +2,43 @@
 
 [![HACS: Custom](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Sommaire
+- [Introduction](#Introduction)
+- [Fonctionnalités](#Fonctionnalités)
+- [Installation](#Installation)
+  - [Prérequis](#Prérequis)
+  - [Installation via l'interface utilisateur](#Installation-via-l'interface-utilisateur)
+  - [Installation manuelle (utilisateurs avancés)](<#Installation-manuelle-(utilisateurs-avancés)>)
+- [Crédits](#Crédits)
+- [FAQ](#FAQ)
 
-1. [Contexte](#Contexte)
-2. [Prérequis](#Prérequis)
-3. [Installation via l'interface utilisateur](#Installation-via-l'interface-utilisateur)
-4. [Installation manuelle (utilisateurs avancés)](<#Installation-manuelle-(utilisateurs-avancés)>)
-5. [FAQ](#FAQ)
+## Introduction
 
-## Contexte
+Cette carte vous permet d'afficher les données de Météo France issue de l'intégration officielle HA [Météo France](https://www.home-assistant.io/integrations/meteo_france/).
 
-Projet reprit de <https://github.com/Imbuzi/meteo-france-weather-card>, pour une adaptation de la carte <https://github.com/bramkragten/weather-card> dédié à Météo France.
+## Fonctionnalités
+
+Les informations affichées :
+
+- conditions météo actuelles,
+- informations météorologiques détaillées,
+- pluviométrie dans l'heure (prévisions à 5 puis 10 minutes),
+- alertes météos en cours (inondations, vents violents, etc) en rapport à votre département,
+- prévisions météo quotidienne de 1 à 15 jours maximum (réglable) ou des prévisions horaires de 1 à x heures (réglable),
+- sélection des informations à afficher pour personnaliser votre carte.
+
+Un exemple de rendu :
 
 ![Weather Card](https://github.com/hacf-fr/lovelace-meteofrance-weather-card/blob/Meteo-France/meteofrance-weather-card.png)
 
-## Prérequis
+## Installation
+
+### Prérequis
 
 Cette carte est prévue pour utiliser les entités de l'intégration [Météo France](https://www.home-assistant.io/integrations/meteo_france/).
 
-## Installation via l'interface utilisateur
+### Installation via l'interface utilisateur
 
-### Installation de la carte
+#### Installation de la carte
 
 1. Depuis [HACS](https://hacs.xyz/) (Home Assistant Community Store), ouvrez le menu en haut à droite et utiliser l'option `Custom repositories` pour ajouter le dépôt de la carte.
 
@@ -34,7 +50,7 @@ Cette carte est prévue pour utiliser les entités de l'intégration [Météo Fr
 
 5. Faire `RELOAD` pour terminer! La carte est maintenant prête à être utiliser dans votre tableau de bord.
 
-### Configuration
+#### Configuration
 
 Vous trouverez la carte dans la liste des cartes personnalisées (en fin de liste) et avec pour nom `Carte Météo France par HACF`.
 
@@ -56,7 +72,7 @@ Une fois choisi, sa configuration est la suivante :
 
 ![Weather Card Configuration](https://github.com/hacf-fr/lovelace-meteofrance-weather-card/blob/Meteo-France/meteofrance-weather-card-editor.png)
 
-## Installation manuelle (utilisateurs avancés)
+### Installation manuelle (utilisateurs avancés)
 
 ---
 
@@ -64,11 +80,11 @@ Cette installation s'adresse aux utilisateurs plus aguerris et/ou utilisant le m
 
 La configuration se fait par défaut dans le fichier `ui-lovelace.yml` dans le dossier `config`.
 
-### Prérequis
+#### Prérequis
 
 Vous devez avoir accès au système de fichiers de HA. Plusieurs méthodes possibles, soit par SSH, soit via l'addon Samba par exemple.
 
-### Installation de la carte
+#### Installation de la carte
 
 1. Préparer le chemin `www/community/` dans le dossier `config` de HA.
 
@@ -90,7 +106,7 @@ Vous devez avoir accès au système de fichiers de HA. Plusieurs méthodes possi
 
 5. Rafraichir votre navigateur avec CTRL+F5.
 
-### Configuration via YAML
+#### Configuration via YAML
 
 Ci-dessous les éléments de configuration avec pour exemple l'usage d'une intégration nommée `nantes`:
 
@@ -117,10 +133,18 @@ view:
         forecast: true
 ```
 
+## Crédits
+
+Projet réalisé par la communauté de HACF et depuis les projets suivants :
+
+- la carte initiale [Lovelace animated weather card](https://github.com/bramkragten/weather-card) de [Bram Kragten](https://github.com/bramkragten).
+
+- les améliorations spécifiques à Météo France de la carte [Lovelace animated weather card](https://github.com/Imbuzi/meteo-france-weather-card) de [Nicolas Bourasseau](https://github.com/Imbuzi).
+
 ## FAQ
 
-- **Question**: La prévision de pluie dans l'heure ne semble pas fonctionner, les cases sont toujours de la même couleur bien que le temps est changeant et pluvieux.
+- **Question** : La prévision de pluie dans l'heure ne semble pas fonctionner, les cases sont toujours de la même couleur bien que le temps est changeant et pluvieux.
 
-  **Réponse**: Valider bien que la ville que vous avez configuré dans l'intégration Météo France soit dans une région où ce type d'information est disponible. Consulter [cette carte](https://meteo.orange.fr/previsions-pluie/) sur le site de météo France.
+  **Réponse** : Valider bien que la ville que vous avez configuré dans l'intégration Météo France soit dans une région où ce type d'information est disponible. Consulter [cette carte](https://meteo.orange.fr/previsions-pluie/) sur le site de météo France.
 
   Vous pouvez également valider, depuis la page `Outils de développement > Etats` de HA, que l'entité `sensor.maville_next_rain` retourne des informations prévisionnelles de pluie dans l'heure.
