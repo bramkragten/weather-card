@@ -245,8 +245,7 @@ class MeteofranceWeatherCard extends LitElement {
         <!-- Cloudy -->
         ${this.renderMeteoFranceDetail(this.hass.states[this._config.cloudCoverEntity])}
         <!-- Wind -->
-        ${this.renderDetail(windDirections[parseInt((stateObj.attributes.wind_bearing + 11.25) / 22.5)] + " " + stateObj.attributes.wind_speed, "Vent", "mdi:weather-windy",
-      this.getUnit("speed"))}
+        ${this.renderDetail((stateObj.attributes.wind_bearing == undefined ? " " : windDirections[parseInt((stateObj.attributes.wind_bearing + 11.25) / 22.5)] + " ") + stateObj.attributes.wind_speed, "Vent", "mdi:weather-windy", this.getUnit("speed"))}
         <!-- Rain -->
         ${this.renderMeteoFranceDetail(this.hass.states[this._config.rainChanceEntity])}
         <!-- Humidity -->
