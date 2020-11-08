@@ -445,6 +445,7 @@ class MeteofranceWeatherCard extends LitElement {
 
   getOneHourForecast(rainForecastEntity) {
     let rainForecastValues = new Map([
+      ["Pas de valeur", 0.1],
       ["Temps sec", 0.1],
       ["Pluie faible", 0.4],
       ["Pluie modérée", 0.7],
