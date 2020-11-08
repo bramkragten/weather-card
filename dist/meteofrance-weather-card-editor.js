@@ -109,6 +109,10 @@ export class MeteofranceWeatherCardEditor extends LitElement {
     return this._config.uvEntity || "";
   }
 
+  get _detailEntity() {
+    return this._config.detailEntity || "";
+  }
+
   firstUpdated() {
     HELPERS.then(help => {
       if (help.importMoreInfoControl) {
@@ -131,6 +135,7 @@ export class MeteofranceWeatherCardEditor extends LitElement {
             .configValue="${"name"}"
             @value-changed="${this._valueChanged}"
           ></paper-input>
+          ${this.renderSensorPicker("Détail", this._detailEntity, "detailEntity")}
           <paper-input
             label="Icons location"
             .value="${this._icons}"
@@ -180,7 +185,7 @@ export class MeteofranceWeatherCardEditor extends LitElement {
 
   renderPicker(label, entity, configAttr, domain) {
     return html`
-                                      <ha-entity-picker
+              <ha-entity-picker
                 label="${label}"
                 .hass="${this.hass}"
                 .value="${entity}"
@@ -252,14 +257,12 @@ export class MeteofranceWeatherCardEditor extends LitElement {
         list-style: none;
         padding: 0;
       }
-
       .switch {
         display: flex;
         align-items: center;
         width: 50%;
         height: 40px;
       }
-
       .switches span {
         padding: 0 16px;
       }
