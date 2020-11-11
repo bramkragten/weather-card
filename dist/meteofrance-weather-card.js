@@ -77,6 +77,14 @@ const forecastText = {
   exceptional: "Exceptionnel"
 }
 
+const rainForecastValues = new Map([
+  ["Pas de valeur", 0.1],
+  ["Temps sec", 0.1],
+  ["Pluie faible", 0.4],
+  ["Pluie modérée", 0.7],
+  ["Pluie forte", 1],
+]);
+
 window.customCards = window.customCards || [];
 window.customCards.push({
   type: "meteofrance-weather-card",
@@ -334,7 +342,8 @@ class MeteofranceWeatherCard extends LitElement {
     return html`
       <ul class="flow-row oneHourHeader ${this.numberElements > 1 ? " spacer" : ""}">
         <li> ${startTime} </li>
-       <li> ${endTime} </li>
+        <li>${this.getOneHourNextRain(rainForecast)}</li>
+        <li> ${endTime} </li>
       </ul>
       <ul class="flow-row oneHour">
         ${html`
@@ -419,11 +428,6 @@ class MeteofranceWeatherCard extends LitElement {
       </ul>`;
   }
 
-  isDailyForecast(forecast) {
-    const diff = new Date(forecast[1].datetime) - new Date(forecast[0].datetime);
-    return diff > 3600000;
-  }
-
   renderDailyForecast(daily, lang, isDaily) {
     return html`
         <li>
@@ -474,15 +478,12 @@ class MeteofranceWeatherCard extends LitElement {
         </li>`;
   }
 
-  getOneHourForecast(rainForecastEntity) {
-    let rainForecastValues = new Map([
-      ["Pas de valeur", 0.1],
-      ["Temps sec", 0.1],
-      ["Pluie faible", 0.4],
-      ["Pluie modérée", 0.7],
-      ["Pluie forte", 1],
-    ]);
+  isDailyForecast(forecast) {
+    const diff = new Date(forecast[1].datetime) - new Date(forecast[0].datetime);
+    return diff > 3600000;
+  }
 
+  getOneHourForecast(rainForecastEntity) {
     let rainForecastList = [];
     for (let [time, value] of Object.entries(
       rainForecastEntity.attributes["1_hour_forecast"]
@@ -503,6 +504,18 @@ class MeteofranceWeatherCard extends LitElement {
     let rainForecastEndTime = rainForecastTimeRef.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
     return [rainForecastStartTime, rainForecastEndTime];
+  }
+
+  getOneHourNextRain(rainForecastEntity) {
+    for (let [time, value] of Object.entries(
+      rainForecastEntity.attributes["1_hour_forecast"]
+    )) {
+      if (time != undefined && rainForecastValues.get(value) > 0.1) {
+        return value + " dans " + time + ".";
+      }
+    }
+
+    return "Pas de pluie dans l'heure!"
   }
 
   getAlertForecast(color, alertEntity) {
@@ -705,12 +718,12 @@ class MeteofranceWeatherCard extends LitElement {
       }
 
       /* One Hour Header */
-      .oneHourHeader > li {
-        flex: 1 1 0;
+      .oneHourHeader {
+        justify-content: space-between;
       }
 
       .oneHourHeader li:last-child {
-        text-align:right;
+        text-align: right;
       }
 
       /* Alert */
