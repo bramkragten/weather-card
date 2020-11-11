@@ -58,7 +58,7 @@ const windDirections = [
   "N",
 ];
 
-const forecastText = {
+const phenomenaText = {
   clear: "Ciel dégagé",
   "clear-night": "Nuit claire",
   cloudy: "Nuageux",
@@ -75,6 +75,11 @@ const forecastText = {
   windy: "Venteux",
   "windy-variant": "Venteux variable",
   exceptional: "Exceptionnel"
+}
+
+const phenomenaNightText = {
+  ...phenomenaText,
+  sunny: "Nuit claire",
 }
 
 const rainForecastValues = new Map([
@@ -249,7 +254,7 @@ class MeteofranceWeatherCard extends LitElement {
     )}') no-repeat; background-size: contain;">
           </li>
           <li>
-            ${forecastText[stateObj.state]}
+            ${this.getPhenomenaText(stateObj.state, this.hass.states["sun.sun"])}
             ${this._config.name
         ? html` <div> ${this._config.name} </div>`
         : ""}
@@ -342,7 +347,7 @@ class MeteofranceWeatherCard extends LitElement {
     return html`
       <ul class="flow-row oneHourHeader ${this.numberElements > 1 ? " spacer" : ""}">
         <li> ${startTime} </li>
-        <li>${this.getOneHourNextRain(rainForecast)}</li>
+        <li>${this.getOneHourNextRainText(rainForecast)}</li>
         <li> ${endTime} </li>
       </ul>
       <ul class="flow-row oneHour">
@@ -506,7 +511,7 @@ class MeteofranceWeatherCard extends LitElement {
     return [rainForecastStartTime, rainForecastEndTime];
   }
 
-  getOneHourNextRain(rainForecastEntity) {
+  getOneHourNextRainText(rainForecastEntity) {
     for (let [time, value] of Object.entries(
       rainForecastEntity.attributes["1_hour_forecast"]
     )) {
@@ -515,7 +520,7 @@ class MeteofranceWeatherCard extends LitElement {
       }
     }
 
-    return "Pas de pluie dans l'heure!"
+    return "Pas de pluie dans l'heure !"
   }
 
   getAlertForecast(color, alertEntity) {
@@ -558,6 +563,13 @@ class MeteofranceWeatherCard extends LitElement {
         ? weatherIconsNight[condition]
         : weatherIconsDay[condition]
       }.svg`;
+  }
+
+  getPhenomenaText(phenomena, sun) {
+    return `${sun && sun.state == "below_horizon"
+      ? phenomenaNightText[phenomena]
+      : phenomenaText[phenomena]
+      }`;
   }
 
   getUnit(measure) {
@@ -754,6 +766,7 @@ class MeteofranceWeatherCard extends LitElement {
       /* Forecast */
       .forecast {
         justify-content: space-between;
+        flex-wrap: nowrap;
       }
 
       .forecast > li {
