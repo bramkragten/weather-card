@@ -263,7 +263,7 @@ class MeteofranceWeatherCard extends LitElement {
               ${this.getUnit("temperature") == "°F"
         ? Math.round(stateObj.attributes.temperature)
         : stateObj.attributes.temperature}
-              <span> ${this.getUnit("temperature")}</span>
+              <sup>${this.getUnit("temperature")}</sup>
             <ul>
               ${this.renderMeteoFranceDetail(this.hass.states[this._config.detailEntity])}
             </ul>
@@ -516,7 +516,7 @@ class MeteofranceWeatherCard extends LitElement {
       rainForecastEntity.attributes["1_hour_forecast"]
     )) {
       if (time != undefined && rainForecastValues.get(value) > 0.1) {
-        return value + " dans " + time + ".";
+        return value + ((time == "0 min") ? " actuellement !" : " dans " + time + ".");
       }
     }
 
@@ -604,10 +604,7 @@ class MeteofranceWeatherCard extends LitElement {
         cursor: pointer;
         margin: auto;
         overflow: hidden;
-        padding-top: 1.3em;
-        padding-bottom: 1.3em;
-        padding-left: 1em;
-        padding-right: 1em;
+        padding: 0.5em 1em;
         position: relative;
       }
 
@@ -654,6 +651,11 @@ class MeteofranceWeatherCard extends LitElement {
 
       .current > *:last-child  {
         margin-left: auto;
+        min-width: max-content;
+      }
+
+      .current > *:last-child sup {
+        font-size: initial;
       }
 
       .current > li {
