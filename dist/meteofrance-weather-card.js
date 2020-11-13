@@ -21,14 +21,14 @@ const weatherIconsDay = {
   exceptional: "!!",
 };
 
-const DefaultSensors = new Map([
+const DefaultSensors = [
   ["cloudCoverEntity", "_cloud_cover"],
   ["rainChanceEntity", "_rain_chance"],
   ["freezeChanceEntity", "_freeze_chance"],
   ["snowChanceEntity", "_snow_chance"],
   ["uvEntity", "_uv"],
   ["rainForecastEntity", "_next_rain"]
-]);
+];
 
 const weatherIconsNight = {
   ...weatherIconsDay,
@@ -119,10 +119,15 @@ function hasConfigOrEntityChanged(element, changedProps) {
 
   const oldHass = changedProps.get("hass");
   if (oldHass) {
+    const entityName = element._config.entity.split(".")[1];
     return (
       oldHass.states[element._config.entity] !==
       element.hass.states[element._config.entity] ||
-      oldHass.states["sun.sun"] !== element.hass.states["sun.sun"]
+      oldHass.states["sun.sun"] !== element.hass.states["sun.sun"] ||
+      !DefaultSensors.every((sensor) => {
+        const sensorName = "sensor." + entityName + sensor[1];
+        oldHass.states[sensorName] == element.hass.states[sensorName];
+      })
     );
   }
 
@@ -167,14 +172,14 @@ class MeteofranceWeatherCard extends LitElement {
   static getWeatherEntitiesFromEntity(hass, entityName, allEntities) {
     let entities = {};
     DefaultSensors.forEach(
-      (sensorSuffix, configAttribute) => {
-        const sensorName = "sensor." + entityName + sensorSuffix;
+      (sensor) => {
+        const sensorName = "sensor." + entityName + sensor[0];
         if (hass.states[sensorName] !== undefined) {
           let sensor = allEntities[sensorName];
           if (!sensor) {
             entities = {
               ...entities,
-              [configAttribute]: sensorName,
+              [sensor[1]]: sensorName,
             };
           }
         }
