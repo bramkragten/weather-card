@@ -525,7 +525,7 @@ class MeteofranceWeatherCard extends LitElement {
       }
     }
 
-    return "Pas de pluie dans l'heure !"
+    return "Pas de pluie dans l'heure."
   }
 
   getAlertForecast(color, alertEntity) {
