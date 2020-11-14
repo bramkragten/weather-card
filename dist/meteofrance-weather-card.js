@@ -657,6 +657,7 @@ class MeteofranceWeatherCard extends LitElement {
       .current > *:last-child  {
         margin-left: auto;
         min-width: max-content;
+        text-align: right;
       }
 
       .current > *:last-child sup {
