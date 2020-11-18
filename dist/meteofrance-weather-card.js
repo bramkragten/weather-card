@@ -359,10 +359,7 @@ class MeteofranceWeatherCard extends LitElement {
         ${html`
         ${this.getOneHourForecast(rainForecast).map(
       (forecast) => html`
-        <li class="rain-${forecast[0]}min" style="opacity: ${forecast[1]}" title="${forecast[2] + " " + (forecast[0] == 0
-          ? " actuellement"
-          : "dans " + forecast[0] + " min")}">
-        </li>`
+        <li class="rain-${forecast[0]}min" style="opacity: ${forecast[1]}" title="${forecast[2]}"></li>`
     )}
         `}
       </ul>
@@ -521,7 +518,8 @@ class MeteofranceWeatherCard extends LitElement {
       rainForecastEntity.attributes["1_hour_forecast"]
     )) {
       if (time != undefined && rainForecastValues.get(value) > 0.1) {
-        return value + ((time == "0 min") ? " actuellement !" : " dans " + time + ".");
+	let timeStr = time.replace(/([345])5/g, "$10");
+        return value + ((time == "0 min") ? " actuellement." : " dans " + timeStr + ".");
       }
     }
 
