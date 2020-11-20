@@ -392,7 +392,7 @@ class MeteofranceWeatherCard extends LitElement {
         ${alerts.map(
       (phenomenon) => html`
       <div class="alertForecast${phenomenon.color}">
-        <ha-icon icon="${phenomenon.icon}" title="${phenomenon.name}"}"></ha-icon>
+        <ha-icon icon="${phenomenon.icon}" title="${phenomenon.name}"></ha-icon>
       </div>`
     )}
     </div>`
@@ -514,31 +514,48 @@ class MeteofranceWeatherCard extends LitElement {
   }
 
   getAlertForecast(alertEntity) {
-    let phenomenaList = [
-       { name: 'Vent violent', icon: 'mdi:weather-windy', color: 'None' },
-       { name: 'Pluie-inondation', icon: 'mdi:weather-pouring', color: 'None' },
-       { name: 'Orages', icon: 'mdi:weather-lightning', color: 'None' },
-       { name: 'Inondation', icon: 'mdi:home-flood', color: 'None' },
-       { name: 'Neige-verglas', icon: 'mdi:weather-snowy-heavy', color: 'None' },
-       { name: 'Canicule', icon: 'mdi:weather-sunny-alert', color: 'None' },
-       { name: 'Grand-froid', icon: 'mdi:snowflake', color: 'None' },
-       { name: 'Avalanches', icon: 'mdi:image-filter-hdr', color: 'None' },
-       { name: 'Vagues-submersion', icon: 'mdi:waves', color: 'None' }
-    ]
+    let phenomenaList = [ ]
 
     if (alertEntity == undefined) {
       return [];
     }
 
-    for (const [currentPhenomenon, currentPhenomenonColor] of Object.entries(
-      alertEntity.attributes
-    )) {
-          let phenoma = phenomenaList.find(phenomena => phenomena.name === currentPhenomenon);
-	  if(phenoma) {
-             phenoma.color=currentPhenomenonColor;
-	  }
-
+    if(!this._config.hide_alertVentViolent && alertEntity.attributes['Vent violent']) {
+       phenomenaList.push({ name: 'Vent violent', icon: 'mdi:weather-windy', color: alertEntity.attributes['Vent violent'] });
     }
+
+    if(!this._config.hide_alertPluieInondation && alertEntity.attributes['Pluie-inondation']) {
+       phenomenaList.push({ name: 'Pluie-inondation', icon: 'mdi:weather-pouring', color: alertEntity.attributes['Pluie-inondation'] });
+    }
+
+    if(!this._config.hide_alertOrages && alertEntity.attributes['Orages']) {
+       phenomenaList.push({ name: 'Orages', icon: 'mdi:weather-lightning', color: alertEntity.attributes['Orages'] });
+    }
+
+    if(!this._config.hide_alertInondation && alertEntity.attributes['Inondation']) {
+       phenomenaList.push({ name: 'Inondation', icon: 'mdi:home-flood', color: alertEntity.attributes['Inondation'] });
+    }
+
+    if(!this._config.hide_alertNeigeVerglas && alertEntity.attributes['Neige-verglas']) {
+       phenomenaList.push({ name: 'Neige-verglas', icon: 'mdi:weather-snowy-heavy', color: alertEntity.attributes['Neige-verglas'] });
+    }
+
+    if(!this._config.hide_alertCanicule && alertEntity.attributes['Canicule']) {
+       phenomenaList.push({ name: 'Canicule', icon: 'mdi:weather-sunny-alert', color: alertEntity.attributes['Canicule'] });
+    }
+
+    if(!this._config.hide_alertGrandFroid && alertEntity.attributes['Grand-froid']) {
+       phenomenaList.push({ name: 'Grand-froid', icon: 'mdi:snowflake', color: alertEntity.attributes['Grand-froid'] });
+    }
+
+    if(!this._config.hide_alertAvalanches && alertEntity.attributes['Avalanches']) {
+       phenomenaList.push({ name: 'Avalanches', icon: 'mdi:image-filter-hdr', color: alertEntity.attributes['Avalanches'] });
+    }
+
+    if(!this._config.hide_alertVaguesSubmersion && alertEntity.attributes['Vagues-submersion']) {
+       phenomenaList.push({ name: 'Vagues-submersion', icon: 'mdi:waves', color: alertEntity.attributes['Vagues-submersion'] });
+    }
+
     return phenomenaList;
   }
 
@@ -744,9 +761,6 @@ class MeteofranceWeatherCard extends LitElement {
         margin-right: 1px;
       }
 
-      .alertForecastNone {
-      }
-
       .alertForecastVert {
       }
 
@@ -760,12 +774,6 @@ class MeteofranceWeatherCard extends LitElement {
 
       .alertForecastRouge {
         background-color: red;
-      }
-
-      .alertForecast .ha-icon {
-        width: 50px;
-        height: 50px;
-        margin-right: 5px;
       }
 
       /* Forecast */

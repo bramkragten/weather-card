@@ -133,6 +133,28 @@ view:
         forecast: true
 ```
 
+#### options avancées via YAML
+
+Ci-dessous les éléments de configuration pour masquer certains champs:
+
+Pour masquer les précipitations :
+```yaml
+hide_precipitation: true
+```
+
+Pour masquer certaines alertes:
+```yaml
+hide_alertVentViolent: true
+hide_alertPluieInondation: true
+hide_alertOrages: true
+hide_alertInondation: true
+hide_alertNeigeVerglas: true
+hide_alertCanicule: true
+hide_alertGrandFroid: true
+hide_alertAvalanches: true
+hide_alertVaguesSubmersion: true
+```
+
 ## Crédits
 
 Projet réalisé par la communauté de HACF et depuis les projets suivants :
