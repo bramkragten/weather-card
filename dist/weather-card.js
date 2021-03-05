@@ -184,60 +184,70 @@ class WeatherCard extends LitElement {
   }
 
   renderDetails(stateObj) {
-    const sun = this.hass.states["sun.sun"];
-    let next_rising;
-    let next_setting;
+    this.numberElements++;
 
-    if (sun) {
-      next_rising = new Date(sun.attributes.next_rising);
-      next_setting = new Date(sun.attributes.next_setting);
+    const items = [];
+
+    if (stateObj.attributes.humidity != null) {
+      items.push(html`
+        <ha-icon icon="mdi:water-percent"></ha-icon>
+        ${stateObj.attributes.humidity}<span class="unit"> % </span>
+      `);
     }
 
-    this.numberElements++;
+    if (stateObj.attributes.wind_speed != null) {
+      items.push(html`
+        <ha-icon icon="mdi:weather-windy"></ha-icon>
+        ${stateObj.attributes.wind_bearing != null
+          ? windDirections[
+              parseInt((stateObj.attributes.wind_bearing + 11.25) / 22.5)
+            ]
+          : ""}
+        ${stateObj.attributes.wind_speed}<span class="unit">
+          ${this.getUnit("length")}/h
+        </span>
+      `);
+    }
+
+    if (stateObj.attributes.pressure != null) {
+      items.push(html`
+        <ha-icon icon="mdi:gauge"></ha-icon>
+        ${stateObj.attributes.pressure}
+        <span class="unit"> ${this.getUnit("air_pressure")} </span>
+      `);
+    }
+
+    if (stateObj.attributes.visibility != null) {
+      items.push(html`
+        <ha-icon icon="mdi:weather-fog"></ha-icon> ${stateObj.attributes
+          .visibility}<span class="unit"> ${this.getUnit("length")} </span>
+      `);
+    }
+
+    const sun = this.hass.states['sun.sun'];
+    if (sun) {
+      const next_rising = new Date(sun.attributes.next_rising);
+      const next_setting = new Date(sun.attributes.next_setting);
+
+      if (items.length % 2 == 1) {
+        items.push(html`<div />`);
+      }
+
+      items.push(html`
+        <ha-icon icon="mdi:weather-sunset-up"></ha-icon>
+        ${next_rising.toLocaleTimeString()}
+      `);
+      items.push(html`
+        <ha-icon icon="mdi:weather-sunset-down"></ha-icon>
+        ${next_setting.toLocaleTimeString()}
+      `);
+    }
+
+    const listItems = items.map(item => html`<li>${item}</li>`);
 
     return html`
       <ul class="variations ${this.numberElements > 1 ? "spacer" : ""}">
-        <li>
-          <ha-icon icon="mdi:water-percent"></ha-icon>
-          ${stateObj.attributes.humidity}<span class="unit"> % </span>
-        </li>
-        <li>
-          <ha-icon icon="mdi:weather-windy"></ha-icon> ${windDirections[
-            parseInt((stateObj.attributes.wind_bearing + 11.25) / 22.5)
-          ]}
-          ${stateObj.attributes.wind_speed}<span class="unit">
-            ${this.getUnit("length")}/h
-          </span>
-        </li>
-        <li>
-          <ha-icon icon="mdi:gauge"></ha-icon>
-          ${stateObj.attributes.pressure}
-          <span class="unit">
-            ${this.getUnit("air_pressure")}
-          </span>
-        </li>
-        <li>
-          <ha-icon icon="mdi:weather-fog"></ha-icon> ${stateObj.attributes
-            .visibility}<span class="unit">
-            ${this.getUnit("length")}
-          </span>
-        </li>
-        ${next_rising
-          ? html`
-              <li>
-                <ha-icon icon="mdi:weather-sunset-up"></ha-icon>
-                ${next_rising.toLocaleTimeString()}
-              </li>
-            `
-          : ""}
-        ${next_setting
-          ? html`
-              <li>
-                <ha-icon icon="mdi:weather-sunset-down"></ha-icon>
-                ${next_setting.toLocaleTimeString()}
-              </li>
-            `
-          : ""}
+        ${listItems}
       </ul>
     `;
   }
