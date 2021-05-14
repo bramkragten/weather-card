@@ -131,18 +131,9 @@ class WeatherCard extends LitElement {
 
     if (!stateObj) {
       return html`
-        <style>
-          .not-found {
-            flex: 1;
-            background-color: yellow;
-            padding: 8px;
-          }
-        </style>
-        <ha-card>
-          <div class="not-found">
+        <hui-warning>
             Entity not available: ${this._config.entity}
-          </div>
-        </ha-card>
+        </hui-warning>
       `;
     }
 
