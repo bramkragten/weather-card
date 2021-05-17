@@ -77,6 +77,12 @@ hourly_forecast: false
 number_of_forecasts: 5
 ```
 
+If you want to hide precipiation:
+
+```yaml
+ hide_precipitation: true
+```
+
 If you want to show the sunrise and sunset times, make sure the `sun` component is enabled:
 
 ```yaml
