@@ -168,7 +168,7 @@ class WeatherCard extends LitElement {
           style="background: none, url('${this.getWeatherIcon(
             stateObj.state.toLowerCase(),
             this.hass.states["sun.sun"]
-          )}') no-repeat; background-size: contain;"
+          )}') no-repeat; background-size: contain; image-rendering: optimizeQuality"
           >${stateObj.state}
         </span>
         ${this._config.name
@@ -281,7 +281,7 @@ class WeatherCard extends LitElement {
                   class="icon"
                   style="background: none, url('${this.getWeatherIcon(
                     daily.condition.toLowerCase()
-                  )}') no-repeat; background-size: contain"
+                  )}') no-repeat; background-size: contain; image-rendering: optimizeQuality"
                 ></i>
                 <div class="highTemp">
                   ${daily.temperature}${this.getUnit("temperature")}
