@@ -1,4 +1,4 @@
-const LitElement = customElements.get("ha-panel-lovelace") ? Object.getPrototypeOf(customElements.get("ha-panel-lovelace")) : Object.getPrototypeOf(customElements.get("hc-lovelace"));
+const LitElement = customElements.get("hui-masonry-view") ? Object.getPrototypeOf(customElements.get("hui-masonry-view")) : Object.getPrototypeOf(customElements.get("hui-view"));
 const html = LitElement.prototype.html;
 const css = LitElement.prototype.css;
 
@@ -127,9 +127,7 @@ class WeatherCard extends LitElement {
 
     this.numberElements = 0;
 
-    const lang = this.hass.selectedLanguage || this.hass.language;
     const stateObj = this.hass.states[this._config.entity];
-
     if (!stateObj) {
       return html`
         <style>
@@ -150,9 +148,9 @@ class WeatherCard extends LitElement {
     return html`
       <ha-card @click="${this._handleClick}">
         ${this._config.current !== false ? this.renderCurrent(stateObj) : ""}
-        ${this._config.details !== false ? this.renderDetails(stateObj, lang) : ""}
+        ${this._config.details !== false ? this.renderDetails(stateObj) : ""}
         ${this._config.forecast !== false
-          ? this.renderForecast(stateObj.attributes.forecast, lang)
+          ? this.renderForecast(stateObj.attributes.forecast)
           : ""}
       </ha-card>
     `;
@@ -161,43 +159,43 @@ class WeatherCard extends LitElement {
   renderCurrent(stateObj) {
     this.numberElements++;
 
+    const apparent_temperature = this.hass.states[this._config.entity_apparent_temperature]; 
+    
     return html`
-      <div class="current ${this.numberElements > 1 ? "spacer" : ""}">
-        <span
-          class="icon bigger"
-          style="background: none, url('${this.getWeatherIcon(
-            stateObj.state.toLowerCase(),
-            this.hass.states["sun.sun"]
-          )}') no-repeat; background-size: contain;"
-          >${stateObj.state}
-        </span>
-        ${this._config.name
-          ? html` <span class="title"> ${this._config.name} </span> `
-          : ""}
-        <span class="temp"
-          >${this.getUnit("temperature") == "°F"
+    <div class="content">
+        <div class="icon-image">
+           <span
+              class="icon bigger"
+              style="background: none, url('${this.getWeatherIcon(
+                stateObj.state.toLowerCase(),
+                this.hass.states["sun.sun"]
+              )}') no-repeat; background-size: contain;"
+              >
+            </span>
+        </div>
+        <div class="info">
+            <div class="name-state">
+                <div class="state">${stateObj.state}</div>
+                <div class="name">${this._config.name ? html` ${this._config.name}` : html`${this.hass.config.location_name}`}</div>
+            </div>
+            <div class="temp-attribute">
+            <div class="temp">${this.getUnit("temperature") == "°F"
             ? Math.round(stateObj.attributes.temperature)
-            : stateObj.attributes.temperature}</span
-        >
-        <span class="tempc"> ${this.getUnit("temperature")}</span>
-      </div>
+            : stateObj.attributes.temperature}&nbsp;${this.getUnit("temperature")}</div>
+            ${this._config.feels_like ? html `<div class="attribute">Feels&nbsp;like&nbsp;${apparent_temperature.state}&nbsp;${this.getUnit("temperature")}</div>`: ""}
+        </div>
+    </div>
     `;
   }
 
-  renderDetails(stateObj, lang) {
+  renderDetails(stateObj) {
     const sun = this.hass.states["sun.sun"];
     let next_rising;
     let next_setting;
 
     if (sun) {
-      next_rising = new Date(sun.attributes.next_rising).toLocaleTimeString(lang, {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    });
-      next_setting = new Date(sun.attributes.next_setting).toLocaleTimeString(lang, {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    });
+      next_rising = new Date(sun.attributes.next_rising);
+      next_setting = new Date(sun.attributes.next_setting);
     }
 
     this.numberElements++;
@@ -233,7 +231,7 @@ class WeatherCard extends LitElement {
           ? html`
               <li>
                 <ha-icon icon="mdi:weather-sunset-up"></ha-icon>
-                ${next_rising}
+                ${next_rising.toLocaleTimeString()}
               </li>
             `
           : ""}
@@ -241,7 +239,7 @@ class WeatherCard extends LitElement {
           ? html`
               <li>
                 <ha-icon icon="mdi:weather-sunset-down"></ha-icon>
-                ${next_setting}
+                ${next_setting.toLocaleTimeString()}
               </li>
             `
           : ""}
@@ -249,10 +247,12 @@ class WeatherCard extends LitElement {
     `;
   }
 
-  renderForecast(forecast, lang) {
+  renderForecast(forecast) {
     if (!forecast || forecast.length === 0) {
       return html``;
     }
+
+    const lang = this.hass.selectedLanguage || this.hass.language;
 
     this.numberElements++;
     return html`
@@ -379,7 +379,15 @@ class WeatherCard extends LitElement {
         position: absolute;
         left: 3em;
         font-weight: 300;
-        font-size: 3em;
+        font-size: 2em;
+        color: var(--primary-text-color);
+      }
+      
+      .subtitle {
+        position: absolute;
+        left: 3em;
+        font-weight: 300;
+        font-size: 1em;
         color: var(--primary-text-color);
       }
 
@@ -390,7 +398,16 @@ class WeatherCard extends LitElement {
         position: absolute;
         right: 1em;
       }
-
+      
+      .tempf {
+        font-weight: 300;
+        font-size: 1em;
+        color: var(--primary-text-color);
+        position: absolute;
+        right: 3.5em;
+        top: 7em;
+      }
+      
       .tempc {
         font-weight: 300;
         font-size: 1.5em;
@@ -400,6 +417,85 @@ class WeatherCard extends LitElement {
         right: 1em;
         margin-top: -14px;
         margin-right: 7px;
+      }
+      
+      .tempfc {
+        font-weight: 300;
+        font-size: 1em;
+        vertical-align: super;
+        color: var(--primary-text-color);
+        position: absolute;
+        right: 2.15em;
+        top: 7em;
+      }
+      
+      .content {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5em;
+        margin-top: 0.75em;
+      }
+    
+      .icon-image {
+        display: flex;
+        align-items: center;
+        min-width: 90px; /* 64px default */
+        /* margin-right: 16px; */
+      }
+      
+      .info {
+        display: flex;
+        justify-content: space-between;
+        flex-grow: 1;
+        overflow: hidden;
+      }
+    	
+      .name-state {
+        overflow: hidden;
+        padding-right: 12px;
+        width: 100%;
+      }
+    
+      .temp-attribute {
+        text-align: right;
+      }
+      .temp-attribute .attribute {
+        right: 2em;
+        position: relative;
+      }
+    
+      .name, .state {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    
+      .state, .temp-attribute .temp {
+        font-size: 28px;
+        line-height: 1.2;
+        text-transform: capitalize;
+      }
+    
+      .name, .attribute {
+    	font-size: 14px;
+        line-height: 1;
+      }
+      
+      .temp-attribute .temp {
+        position: relative;
+        /* margin-right: 24px; */
+      }
+      
+      .name, .attribute {
+        font-size: 14px;
+        line-height: 1;
+      }
+      .temp-attribute .temp span {
+        position: absolute;
+        font-size: 24px;
+        top: 1px;
       }
 
       @media (max-width: 460px) {
@@ -416,7 +512,7 @@ class WeatherCard extends LitElement {
       }
 
       .current {
-        padding: 1.2em 0;
+        padding: 2em 0;
         margin-bottom: 3.5em;
       }
 
@@ -499,9 +595,9 @@ class WeatherCard extends LitElement {
       }
 
       .icon.bigger {
-        width: 10em;
-        height: 10em;
-        margin-top: -4em;
+        width: 8em;
+        height: 8em;
+        /* margin-top: -2em; */
         position: absolute;
         left: 0em;
       }
