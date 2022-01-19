@@ -60,6 +60,10 @@ export class WeatherCardEditor extends LitElement {
   get _hourly_forecast() {
     return this._config.hourly_forecast !== false;
   }
+  
+  get _feels_like() {
+    return this._config.feels_like !== false;
+  }
 
   get _number_of_forecasts() {
     return this._config.number_of_forecasts || 5;
@@ -157,6 +161,16 @@ export class WeatherCardEditor extends LitElement {
               ></ha-switch
               ><span>Show hourly forecast</span>
             </div>
+          </div>
+          <div class="switches">
+            <div class="switch">
+              <ha-switch
+                .checked=${this._feels_like}
+                .configValue="${"feels_like"}"
+                @change="${this._valueChanged}"
+              ></ha-switch
+              ><span>Show &quot;Feels like&quot; temp</span>
+              </div>
           </div>
           <paper-input
             label="Number of future forcasts"
