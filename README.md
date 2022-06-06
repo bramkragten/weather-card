@@ -58,7 +58,7 @@ Une fois choisi, sa configuration est la suivante :
 
 1. **Définir un nom** pour la carte (généralement la ville, comme pour l'intégration).
 
-2. **Sélectionner l'entité météo** que vous avez définit avec l'intégration (par défaut la carte en choisit une mais ce n'est pas forcément l'entité météo france que vous avez configuré).
+2. **Sélectionner l'entité météo** que vous avez défini avec l'intégration (par défaut la carte en choisit une mais ce n'est pas forcément l'entité météo france que vous avez configurée).
 
 3. Toutes les autres entités **sont automatiquement définies** mais vous pouvez les redéfinir ou les supprimer à votre guise.
 
@@ -165,8 +165,8 @@ Projet réalisé par la communauté de HACF et depuis les projets suivants :
 
 ## FAQ
 
-- **Question** : La prévision de pluie dans l'heure ne semble pas fonctionner, les cases sont toujours de la même couleur bien que le temps est changeant et pluvieux.
+- **Question** : La prévision de pluie dans l'heure ne semble pas fonctionner, les cases sont toujours de la même couleur bien que le temps soit changeant et pluvieux.
 
-  **Réponse** : Valider bien que la ville que vous avez configuré dans l'intégration Météo France soit dans une région où ce type d'information est disponible. Consulter [cette carte](https://meteo.orange.fr/previsions-pluie/) sur le site de météo France.
+  **Réponse** : Valider bien que la ville que vous ayez configuré dans l'intégration Météo France soit dans une région où ce type d'information est disponible. Consulter [cette carte](https://meteo.orange.fr/previsions-pluie/) sur le site de météo France.
 
   Vous pouvez également valider, depuis la page `Outils de développement > Etats` de HA, que l'entité `sensor.maville_next_rain` retourne des informations prévisionnelles de pluie dans l'heure.
