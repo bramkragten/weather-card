@@ -1,4 +1,4 @@
-const LitElement = customElements.get("ha-panel-lovelace") ? Object.getPrototypeOf(customElements.get("ha-panel-lovelace")) : Object.getPrototypeOf(customElements.get("hc-lovelace"));
+const LitElement = customElements.get("hui-masonry-view") ? Object.getPrototypeOf(customElements.get("hui-masonry-view")) : Object.getPrototypeOf(customElements.get("hui-view"));
 const html = LitElement.prototype.html;
 const css = LitElement.prototype.css;
 
@@ -127,8 +127,8 @@ class WeatherCard extends LitElement {
 
     this.numberElements = 0;
 
-    const lang = this.hass.selectedLanguage || this.hass.language;
     const stateObj = this.hass.states[this._config.entity];
+    const feelsLikeObj = this.hass.states[this._config.feelsLikeSensor];
 
     if (!stateObj) {
       return html`
@@ -149,16 +149,16 @@ class WeatherCard extends LitElement {
 
     return html`
       <ha-card @click="${this._handleClick}">
-        ${this._config.current !== false ? this.renderCurrent(stateObj) : ""}
-        ${this._config.details !== false ? this.renderDetails(stateObj, lang) : ""}
+        ${this._config.current !== false ? this.renderCurrent(stateObj, feelsLikeObj) : ""}
+        ${this._config.details !== false ? this.renderDetails(stateObj) : ""}
         ${this._config.forecast !== false
-          ? this.renderForecast(stateObj.attributes.forecast, lang)
+          ? this.renderForecast(stateObj.attributes.forecast)
           : ""}
       </ha-card>
     `;
   }
 
-  renderCurrent(stateObj) {
+  renderCurrent(stateObj, feelsLikeObj) {
     this.numberElements++;
 
     return html`
@@ -180,24 +180,20 @@ class WeatherCard extends LitElement {
             : stateObj.attributes.temperature}</span
         >
         <span class="tempc"> ${this.getUnit("temperature")}</span>
-      </div>
+        <span class="feels">Feels like ${feelsLikeObj ? `${feelsLikeObj.state} ${feelsLikeObj.attributes.unit_of_measurement}` : ""}</span>
+        <span class="tempc"> ${this.getUnit("temperature")}</span>
+      </div> 
     `;
   }
 
-  renderDetails(stateObj, lang) {
+  renderDetails(stateObj) {
     const sun = this.hass.states["sun.sun"];
     let next_rising;
     let next_setting;
 
     if (sun) {
-      next_rising = new Date(sun.attributes.next_rising).toLocaleTimeString(lang, {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    });
-      next_setting = new Date(sun.attributes.next_setting).toLocaleTimeString(lang, {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    });
+      next_rising = new Date(sun.attributes.next_rising);
+      next_setting = new Date(sun.attributes.next_setting);
     }
 
     this.numberElements++;
@@ -233,7 +229,7 @@ class WeatherCard extends LitElement {
           ? html`
               <li>
                 <ha-icon icon="mdi:weather-sunset-up"></ha-icon>
-                ${next_rising}
+                ${next_rising.toLocaleTimeString()}
               </li>
             `
           : ""}
@@ -241,7 +237,7 @@ class WeatherCard extends LitElement {
           ? html`
               <li>
                 <ha-icon icon="mdi:weather-sunset-down"></ha-icon>
-                ${next_setting}
+                ${next_setting.toLocaleTimeString()}
               </li>
             `
           : ""}
@@ -249,10 +245,12 @@ class WeatherCard extends LitElement {
     `;
   }
 
-  renderForecast(forecast, lang) {
+  renderForecast(forecast) {
     if (!forecast || forecast.length === 0) {
       return html``;
     }
+
+    const lang = this.hass.selectedLanguage || this.hass.language;
 
     this.numberElements++;
     return html`
@@ -528,6 +526,14 @@ class WeatherCard extends LitElement {
         left: 6em;
         word-wrap: break-word;
         width: 30%;
+      }
+
+      .feels {
+        position: absolute;
+        right: 1em;
+        margin-top: 35px;
+        font-size: 0.8em;
+        margin-right: 15px;
       }
     `;
   }
