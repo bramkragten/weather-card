@@ -36,6 +36,10 @@ export class WeatherCardEditor extends LitElement {
   get _entity() {
     return this._config.entity || "";
   }
+  
+  get _feelsLikeSensor() {
+    return this._config.feelsLikeSensor || "";
+  }
 
   get _name() {
     return this._config.name || "";
@@ -82,6 +86,10 @@ export class WeatherCardEditor extends LitElement {
       (eid) => eid.substr(0, eid.indexOf(".")) === "weather"
     );
 
+    const sensors = Object.keys(this.hass.states).filter(
+      (eid) => eid.substr(0, eid.indexOf(".")) === "sensor"
+    );
+
     return html`
       <div class="card-config">
         <div>
@@ -124,6 +132,33 @@ export class WeatherCardEditor extends LitElement {
                   </paper-listbox>
                 </paper-dropdown-menu>
               `}
+              ${customElements.get("ha-entity-picker")
+              ? html`
+                  <ha-entity-picker
+                    .hass="${this.hass}"
+                    .value="${this._feelsLikeSensor}"
+                    .configValue=${"feelsLikeSensor"}
+                    domain-filter="sensor"
+                    @change="${this._valueChanged}"
+                    allow-custom-entity
+                  ></ha-entity-picker>
+                `
+              : html`
+                  <paper-dropdown-menu
+                    label="Feels like sensor"
+                    @value-changed="${this._valueChanged}"
+                    .configValue="${"feelsLikeSensor"}"
+                  >
+                    <paper-listbox
+                      slot="dropdown-content"
+                      .selected="${sensors.indexOf(this._feelsLikeSensor)}"
+                    >
+                      ${sensors.map((entity) => {
+                        return html` <paper-item>${entity}</paper-item> `;
+                      })}
+                    </paper-listbox>
+                  </paper-dropdown-menu>
+                `}
           <div class="switches">
             <div class="switch">
               <ha-switch
