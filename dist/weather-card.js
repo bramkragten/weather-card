@@ -280,7 +280,10 @@ class WeatherCard extends LitElement {
                 <i
                   class="icon"
                   style="background: none, url('${this.getWeatherIcon(
-                    daily.condition.toLowerCase()
+                    daily.condition.toLowerCase(),
+                    this.hass.states["sun.sun"],
+                    this._config.hourly_forecast,
+                    daily.datetime
                   )}') no-repeat; background-size: contain"
                 ></i>
                 <div class="highTemp">
@@ -318,16 +321,24 @@ class WeatherCard extends LitElement {
     `;
   }
 
-  getWeatherIcon(condition, sun) {
+  getWeatherIcon(condition, sun, hourly, dt) {
     return `${
       this._config.icons
         ? this._config.icons
         : "https://cdn.jsdelivr.net/gh/bramkragten/weather-card/dist/icons/"
     }${
-      sun && sun.state == "below_horizon"
+      sun && ((!dt && sun.state == "below_horizon") || (dt && hourly && this.getIsNight(sun, dt)))
         ? weatherIconsNight[condition]
         : weatherIconsDay[condition]
     }.svg`;
+  }
+
+  getIsNight(sun, dt)
+  {
+      const time = new Date(dt).getHours();
+      const afterSetting = time > new Date(sun.attributes.next_setting).getHours();
+      const beforeRising = time < new Date(sun.attributes.next_rising).getHours();
+      return beforeRising || afterSetting;
   }
 
   getUnit(measure) {
