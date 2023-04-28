@@ -40,15 +40,15 @@ Cette carte est prévue pour utiliser les entités de l'intégration [Météo Fr
 
 #### Installation de la carte
 
-1. Depuis [HACS](https://hacs.xyz/) (Home Assistant Community Store), ouvrez le menu en haut à droite et utiliser l'option `Custom repositories` pour ajouter le dépôt de la carte.
+1. Depuis [HACS](https://hacs.xyz/) (Home Assistant Community Store), sléectionner `Frontend`. Puis ouvrez le menu en haut à droite et utiliser l'option `Dépôts personnalisés` pour ajouter le dépôt de la carte.
 
-2. Ajoutez l'adresse <https://github.com/hacf-fr/lovelace-meteofrance-weather-card> avec pour catégorie `Lovelace`, et faire `ADD`. Le dépôt de la carte apparaît dans la liste.
+2. Ajoutez l'adresse <https://github.com/hacf-fr/lovelace-meteofrance-weather-card> avec pour catégorie `Lovelace`, et faire `AJOUTER`. Le dépôt de la carte apparaît dans la liste.
 
-3. Sélectionner ce dépôt (cette présentation de la carte va s'afficher dans une fenêtre) et utiliser l'option `INSTALL THIS REPOSITORY` en bas à droite de la fenêtre.
+3. La carte de ce `nouveau dépôt` va s'afficher, cliquez sur `INSTALLER`.
 
-4. Laisser le choix de la dernière version et utiliser l'option `INSTALL` en bas à droite.
+4. Laisser le choix de la dernière version et utiliser l'option `INSTALLER` en bas à droite.
 
-5. Faire `RELOAD` pour terminer! La carte est maintenant prête à être utiliser dans votre tableau de bord.
+5. Faire `RECHARGER LA PAGE` pour terminer! La carte est maintenant prête à être utiliser dans votre tableau de bord.
 
 #### Configuration
 
@@ -66,7 +66,7 @@ Une fois choisi, sa configuration est la suivante :
 
 5. **Sélectionner les parties** de la carte **à afficher** (vous pouvez ainsi avoir plusieurs cartes avec des affichages différents).
 
-6. **Préciser le nombre de jours de prévision** à afficher en bas de carte.
+6. **Préciser le nombre de jours de prévision** à afficher en bas de carte, maximum 5.
 
 7. `Enregistrer` votre configuration.
 
