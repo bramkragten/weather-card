@@ -30,6 +30,7 @@ const DefaultSensors = [
   ["rainForecastEntity", "_next_rain"]
 ];
 
+
 const weatherIconsNight = {
   ...weatherIconsDay,
   clear: "night",
@@ -465,6 +466,14 @@ class MeteofranceWeatherCard extends LitElement {
         ? html`
             <li class="precipitation_probability">
             ${Math.round(daily.precipitation_probability)} ${this.getUnit("precipitation_probability")}
+            </li>
+          `
+        : ""}
+          ${daily.wind_speed !== undefined && 
+		daily.wind_speed !== null
+        ? html`
+            <li class="wind_speed">
+            ${Math.round(daily.wind_speed * 3.6)} ${this.getUnit("speed")}
             </li>
           `
         : ""}
