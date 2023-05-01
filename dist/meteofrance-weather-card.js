@@ -473,7 +473,7 @@ class MeteofranceWeatherCard extends LitElement {
 		daily.wind_speed !== null
         ? html`
             <li class="wind_speed">
-            ${Math.round(daily.wind_speed * 3.6)} ${this.getUnit("speed")}
+            ${Math.round(daily.wind_speed)} ${this.getUnit("speed")}
             </li>
           `
         : ""}
