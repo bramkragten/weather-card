@@ -32,11 +32,10 @@ const DefaultSensors = [
 
 
 const weatherIconsNight = {
-  ...weatherIconsDay,
+  ...weatherIconsDay,	
   clear: "night",
   sunny: "night",
   partlycloudy: "cloudy-night-3",
-  "windy-variant": "cloudy-night-3",
 };
 
 const windDirections = [
@@ -438,7 +437,7 @@ class MeteofranceWeatherCard extends LitElement {
         })}
             </li>
             <li class="icon" style="background: none, url('${this.getWeatherIcon(
-          daily.condition.toLowerCase()
+          daily.condition.toLowerCase(), this.isNightTime(isDaily, daily.datetime)
         )}') no-repeat; background-size: contain">
             </li>
             <li class="highTemp">
@@ -568,15 +567,29 @@ class MeteofranceWeatherCard extends LitElement {
     return phenomenaList;
   }
 
-  getWeatherIcon(condition, sun) {
+  getWeatherIcon(condition, isNight) {
     return `${this._config.icons
       ? this._config.icons
       : "/local/community/lovelace-meteofrance-weather-card/icons/"
-      }${sun && sun.state == "below_horizon"
+      }${isNight
         ? weatherIconsNight[condition]
         : weatherIconsDay[condition]
       }.svg`;
   }
+
+  isNightTime(isDaily, datetimehourly) {
+    const sun = this.hass.states["sun.sun"];
+    if (!sun || isDaily ) { return false}
+
+    let nextrising = new Date(sun.attributes.next_rising);
+    let nextsetting = new Date(sun.attributes.next_setting);
+
+    const thistime = datetimehourly ? new Date(datetimehourly) : new Date()
+	
+	return ((thistime > nextsetting && thistime < nextrising) || (thistime < nextsetting && thistime < nextrising && nextrising < nextsetting))
+  }
+  
+
 
   getPhenomenaText(phenomena, sun) {
     return `${sun && sun.state == "below_horizon"
