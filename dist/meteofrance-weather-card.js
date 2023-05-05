@@ -1,4 +1,6 @@
-const LitElement = customElements.get("hui-masonry-view") ? Object.getPrototypeOf(customElements.get("hui-masonry-view")) : Object.getPrototypeOf(customElements.get("hui-view"));
+const LitElement = customElements.get("hui-masonry-view")
+  ? Object.getPrototypeOf(customElements.get("hui-masonry-view"))
+  : Object.getPrototypeOf(customElements.get("hui-view"));
 const html = LitElement.prototype.html;
 const css = LitElement.prototype.css;
 
@@ -27,12 +29,11 @@ const DefaultSensors = [
   ["freezeChanceEntity", "_freeze_chance"],
   ["snowChanceEntity", "_snow_chance"],
   ["uvEntity", "_uv"],
-  ["rainForecastEntity", "_next_rain"]
+  ["rainForecastEntity", "_next_rain"],
 ];
 
-
 const weatherIconsNight = {
-  ...weatherIconsDay,	
+  ...weatherIconsDay,
   clear: "night",
   sunny: "night",
   partlycloudy: "cloudy-night-3",
@@ -74,13 +75,13 @@ const phenomenaText = {
   sunny: "Ensoleillé",
   windy: "Venteux",
   "windy-variant": "Venteux variable",
-  exceptional: "Exceptionnel"
-}
+  exceptional: "Exceptionnel",
+};
 
 const phenomenaNightText = {
   ...phenomenaText,
   sunny: "Nuit claire",
-}
+};
 
 const rainForecastValues = new Map([
   ["Pas de valeur", 0.1],
@@ -96,7 +97,8 @@ window.customCards.push({
   name: "Carte Météo France par HACF",
   description: "Carte pour l'intégration Météo France.",
   preview: true,
-  documentationURL: "https://github.com/hacf-fr/lovelace-meteofrance-weather-card",
+  documentationURL:
+    "https://github.com/hacf-fr/lovelace-meteofrance-weather-card",
 });
 
 const fireEvent = (node, type, detail, options) => {
@@ -122,7 +124,7 @@ function hasConfigOrEntityChanged(element, changedProps) {
     const entityName = element._config.entity.split(".")[1];
     return (
       oldHass.states[element._config.entity] !==
-      element.hass.states[element._config.entity] ||
+        element.hass.states[element._config.entity] ||
       oldHass.states["sun.sun"] !== element.hass.states["sun.sun"] ||
       !DefaultSensors.every((sensor) => {
         const sensorName = "sensor." + entityName + sensor[1];
@@ -152,10 +154,14 @@ class MeteofranceWeatherCard extends LitElement {
     let entities = { entity };
 
     if (entity) {
-      let sensors = this.getWeatherEntitiesFromEntity(hass, entity.split(".")[1], allEntities);
+      let sensors = this.getWeatherEntitiesFromEntity(
+        hass,
+        entity.split(".")[1],
+        allEntities
+      );
       entities = {
         ...entities,
-        ...sensors
+        ...sensors,
       };
     }
     return entities;
@@ -171,20 +177,18 @@ class MeteofranceWeatherCard extends LitElement {
 
   static getWeatherEntitiesFromEntity(hass, entityName, allEntities) {
     let entities = {};
-    DefaultSensors.forEach(
-      (sensor) => {
-        const sensorName = "sensor." + entityName + sensor[0];
-        if (hass.states[sensorName] !== undefined) {
-          let sensor = allEntities[sensorName];
-          if (!sensor) {
-            entities = {
-              ...entities,
-              [sensor[1]]: sensorName,
-            };
-          }
+    DefaultSensors.forEach((sensor) => {
+      const sensorName = "sensor." + entityName + sensor[0];
+      if (hass.states[sensorName] !== undefined) {
+        let sensor = allEntities[sensorName];
+        if (!sensor) {
+          entities = {
+            ...entities,
+            [sensor[1]]: sensorName,
+          };
         }
       }
-    )
+    });
     return entities;
   }
 
@@ -232,19 +236,20 @@ class MeteofranceWeatherCard extends LitElement {
     return html`
       <ha-card @click="${this._handleClick}">
         ${this.isSelected(this._config.current)
-        ? this.renderCurrent(stateObj) : ""}
-
+          ? this.renderCurrent(stateObj)
+          : ""}
         ${this.isSelected(this._config.details)
-        ? this.renderDetails(stateObj) : ""}
-
+          ? this.renderDetails(stateObj)
+          : ""}
         ${this.isSelected(this._config.alert_forecast)
-        ? this.renderAlertForecast() : ""}
-
+          ? this.renderAlertForecast()
+          : ""}
         ${this.isSelected(this._config.one_hour_forecast)
-        ? this.renderOneHourForecast() : ""}
-
+          ? this.renderOneHourForecast()
+          : ""}
         ${this.isSelected(this._config.forecast)
-        ? this.renderForecast(stateObj.attributes.forecast) : ""}
+          ? this.renderForecast(stateObj.attributes.forecast)
+          : ""}
       </ha-card>
     `;
   }
@@ -252,28 +257,32 @@ class MeteofranceWeatherCard extends LitElement {
   renderCurrent(stateObj) {
     this.numberElements++;
     return html`
-        <ul class="flow-row current">
-          <li style="background: none, url('${this.getWeatherIcon(
-      stateObj.state.toLowerCase(),
-      this.hass.states["sun.sun"]
-    )}') no-repeat; background-size: contain;">
-          </li>
-          <li>
-            ${this.getPhenomenaText(stateObj.state, this.hass.states["sun.sun"])}
-            ${this._config.name
-        ? html` <div> ${this._config.name} </div>`
-        : ""}
-          </li>
-          <li>
-              ${this.getUnit("temperature") == "°F"
-        ? Math.round(stateObj.attributes.temperature)
-        : stateObj.attributes.temperature}
-              <sup>${this.getUnit("temperature")}</sup>
-            <ul>
-              ${this.renderMeteoFranceDetail(this.hass.states[this._config.detailEntity])}
-            </ul>
-          </li>
-        </ul>
+      <ul class="flow-row current">
+        <li
+          style="background: none, url('${this.getWeatherIcon(
+            stateObj.state.toLowerCase(),
+            this.isNightTime(daily.datetime)
+          )}') no-repeat; background-size: contain;"
+        ></li>
+        <li>
+          ${this.getPhenomenaText(
+            stateObj.state,
+            this.isNightTime(daily.datetime)
+          )}
+          ${this._config.name ? html` <div>${this._config.name}</div>` : ""}
+        </li>
+        <li>
+          ${this.getUnit("temperature") == "°F"
+            ? Math.round(stateObj.attributes.temperature)
+            : stateObj.attributes.temperature}
+          <sup>${this.getUnit("temperature")}</sup>
+          <ul>
+            ${this.renderMeteoFranceDetail(
+              this.hass.states[this._config.detailEntity]
+            )}
+          </ul>
+        </li>
+      </ul>
     `;
   }
 
@@ -292,50 +301,88 @@ class MeteofranceWeatherCard extends LitElement {
     return html`
       <ul class="flow-row details ${this.numberElements > 1 ? " spacer" : ""}">
         <!-- Cloudy -->
-        ${this.renderMeteoFranceDetail(this.hass.states[this._config.cloudCoverEntity])}
+        ${this.renderMeteoFranceDetail(
+          this.hass.states[this._config.cloudCoverEntity]
+        )}
         <!-- Wind -->
-        ${this.renderDetail((stateObj.attributes.wind_bearing == undefined ? " " : windDirections[parseInt((stateObj.attributes.wind_bearing + 11.25) / 22.5)] + " ") + stateObj.attributes.wind_speed, "Vent", "mdi:weather-windy", this.getUnit("speed"))}
+        ${this.renderDetail(
+          (stateObj.attributes.wind_bearing == undefined
+            ? " "
+            : windDirections[
+                parseInt((stateObj.attributes.wind_bearing + 11.25) / 22.5)
+              ] + " ") + stateObj.attributes.wind_speed,
+          "Vent",
+          "mdi:weather-windy",
+          this.getUnit("speed")
+        )}
         <!-- Rain -->
-        ${this.renderMeteoFranceDetail(this.hass.states[this._config.rainChanceEntity])}
+        ${this.renderMeteoFranceDetail(
+          this.hass.states[this._config.rainChanceEntity]
+        )}
         <!-- Humidity -->
-        ${this.renderDetail(stateObj.attributes.humidity, "Humidité", "mdi:water-percent", "%")}
+        ${this.renderDetail(
+          stateObj.attributes.humidity,
+          "Humidité",
+          "mdi:water-percent",
+          "%"
+        )}
         <!-- Freeze -->
-        ${this.renderMeteoFranceDetail(this.hass.states[this._config.freezeChanceEntity])}
+        ${this.renderMeteoFranceDetail(
+          this.hass.states[this._config.freezeChanceEntity]
+        )}
         <!-- Pressure -->
-        ${this.renderDetail(stateObj.attributes.pressure, "Pression atmosphérique", "mdi:gauge", this.getUnit("air_pressure"))}
+        ${this.renderDetail(
+          stateObj.attributes.pressure,
+          "Pression atmosphérique",
+          "mdi:gauge",
+          this.getUnit("air_pressure")
+        )}
         <!-- Snow -->
-        ${this.renderMeteoFranceDetail(this.hass.states[this._config.snowChanceEntity])}
+        ${this.renderMeteoFranceDetail(
+          this.hass.states[this._config.snowChanceEntity]
+        )}
         <!-- UV -->
         ${this.renderMeteoFranceDetail(this.hass.states[this._config.uvEntity])}
       </ul>
       <ul class="flow-row details">
         <!-- Sunset up -->
         ${next_rising
-        ? this.renderDetail(next_rising.toLocaleTimeString(), "Heure de lever", "mdi:weather-sunset-up")
-        : ""}
+          ? this.renderDetail(
+              next_rising.toLocaleTimeString(),
+              "Heure de lever",
+              "mdi:weather-sunset-up"
+            )
+          : ""}
         <!-- Sunset down -->
         ${next_setting
-        ? this.renderDetail(next_setting.toLocaleTimeString(), "Heure de coucher", "mdi:weather-sunset-down")
-        : ""}
+          ? this.renderDetail(
+              next_setting.toLocaleTimeString(),
+              "Heure de coucher",
+              "mdi:weather-sunset-down"
+            )
+          : ""}
       </ul>
     `;
   }
 
   renderMeteoFranceDetail(entity) {
     return entity !== undefined
-      ? this.renderDetail(entity.state, entity.attributes.friendly_name, entity.attributes.icon, entity.attributes.unit_of_measurement)
-      : ""
+      ? this.renderDetail(
+          entity.state,
+          entity.attributes.friendly_name,
+          entity.attributes.icon,
+          entity.attributes.unit_of_measurement
+        )
+      : "";
   }
 
   renderDetail(state, label, icon, unit) {
     return html`
       <li>
         <ha-icon icon="${icon}" title="${label}"></ha-icon>
-        ${state}
-        ${unit ? html`${unit}`
-        : ""}
+        ${state} ${unit ? html`${unit}` : ""}
       </li>
-    `
+    `;
   }
 
   renderOneHourForecast() {
@@ -349,18 +396,24 @@ class MeteofranceWeatherCard extends LitElement {
 
     let [startTime, endTime] = this.getOneHourForecastTime(rainForecast);
 
-    return html`
-      <ul class="flow-row oneHourHeader ${this.numberElements > 1 ? " spacer" : ""}">
-        <li> ${startTime} </li>
+    return html` <ul
+        class="flow-row oneHourHeader ${this.numberElements > 1
+          ? " spacer"
+          : ""}"
+      >
+        <li>${startTime}</li>
         <li>${this.getOneHourNextRainText(rainForecast)}</li>
-        <li> ${endTime} </li>
+        <li>${endTime}</li>
       </ul>
       <ul class="flow-row oneHour">
         ${html`
-        ${this.getOneHourForecast(rainForecast).map(
-      (forecast) => html`
-        <li class="rain-${forecast[0]}min" style="opacity: ${forecast[1]}" title="${forecast[2]}"></li>`
-    )}
+          ${this.getOneHourForecast(rainForecast).map(
+            (forecast) => html` <li
+              class="rain-${forecast[0]}min"
+              style="opacity: ${forecast[1]}"
+              title="${forecast[2]}"
+            ></li>`
+          )}
         `}
       </ul>
       <ul class="flow-row oneHourLabel">
@@ -382,20 +435,22 @@ class MeteofranceWeatherCard extends LitElement {
 
     const alerts = this.getAlertForecast(alertForecast);
 
-    if (alerts.length == 0)
-      return html``
+    if (alerts.length == 0) return html``;
 
     this.numberElements++;
 
-    return html`
-      <div class="flow-row alertForecast ${this.numberElements > 1 ? " spacer" : ""}">
-        ${alerts.map(
-      (phenomenon) => html`
-      <div class="alertForecast${phenomenon.color}">
-        <ha-icon icon="${phenomenon.icon}" title="${phenomenon.name}"></ha-icon>
-      </div>`
-    )}
-    </div>`
+    return html` <div
+      class="flow-row alertForecast ${this.numberElements > 1 ? " spacer" : ""}"
+    >
+      ${alerts.map(
+        (phenomenon) => html` <div class="alertForecast${phenomenon.color}">
+          <ha-icon
+            icon="${phenomenon.icon}"
+            title="${phenomenon.name}"
+          ></ha-icon>
+        </div>`
+      )}
+    </div>`;
   }
 
   renderForecast(forecast) {
@@ -407,82 +462,104 @@ class MeteofranceWeatherCard extends LitElement {
     const isDaily = this.isDailyForecast(forecast);
 
     this.numberElements++;
-    return html`
-      <ul class="flow-row forecast ${this.numberElements > 1 ? " spacer" : ""}">
-        ${forecast
+    return html` <ul
+      class="flow-row forecast ${this.numberElements > 1 ? " spacer" : ""}"
+    >
+      ${forecast
         .slice(
           0,
           this._config.number_of_forecasts
             ? this._config.number_of_forecasts
             : 5
         )
-        .map(
-          (daily) => this.renderDailyForecast(daily, lang, isDaily)
-        )}
-      </ul>`;
+        .map((daily) => this.renderDailyForecast(daily, lang, isDaily))}
+    </ul>`;
   }
 
   renderDailyForecast(daily, lang, isDaily) {
-    return html`
+    return html` <li>
+      <ul class="flow-column day">
         <li>
-          <ul class="flow-column day">
-            <li>
-            ${isDaily
-        ? new Date(daily.datetime).toLocaleDateString(lang, {
-          weekday: "short",
-        })
-        : new Date(daily.datetime).toLocaleTimeString(lang, {
-          hour: "2-digit",
-          minute: "2-digit",
-        })}
-            </li>
-            <li class="icon" style="background: none, url('${this.getWeatherIcon(
-          daily.condition.toLowerCase(), this.isNightTime(isDaily, daily.datetime)
-        )}') no-repeat; background-size: contain">
-            </li>
-            <li class="highTemp">
-            ${daily.temperature}${this.getUnit("temperature")}
-            </li>
-          ${daily.templow !== undefined
-        ? html`
-            <li class="lowTemp">
-            ${daily.templow}${this.getUnit("temperature")}
-            </li>
-          `
-        : ""}
-          ${!this._config.hide_precipitation &&
+          ${isDaily
+            ? new Date(daily.datetime).toLocaleDateString(lang, {
+                weekday: "short",
+              })
+            : new Date(daily.datetime).toLocaleTimeString(lang, {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+        </li>
+        <li
+          class="icon"
+          style="background: none, url('${this.getWeatherIcon(
+            daily.condition.toLowerCase(),
+            !isDaily && this.isNightTime(daily.datetime)
+          )}') no-repeat; background-size: contain"
+        ></li>
+        <li class="highTemp">
+          ${daily.temperature}${this.getUnit("temperature")}
+        </li>
+        ${daily.templow !== undefined
+          ? html`
+              <li class="lowTemp">
+                ${daily.templow}${this.getUnit("temperature")}
+              </li>
+            `
+          : ""}
+        ${!this._config.hide_precipitation &&
         daily.precipitation !== undefined &&
         daily.precipitation !== null
-        ? html`
-            <li class="precipitation">
-              ${Math.round(daily.precipitation * 10) / 10} ${this.getUnit("precipitation")}
-            </li>
-          `
-        : ""}
-          ${!this._config.hide_precipitation &&
+          ? html`
+              <li class="precipitation">
+                ${Math.round(daily.precipitation * 10) / 10}
+                ${this.getUnit("precipitation")}
+              </li>
+            `
+          : ""}
+        ${!this._config.hide_precipitation &&
         daily.precipitation_probability !== undefined &&
         daily.precipitation_probability !== null
-        ? html`
-            <li class="precipitation_probability">
-            ${Math.round(daily.precipitation_probability)} ${this.getUnit("precipitation_probability")}
-            </li>
-          `
-        : ""}
-          ${daily.wind_speed !== undefined && 
-		daily.wind_speed !== null
-        ? html`
-            <li class="wind_speed">
-            ${Math.round(daily.wind_speed)} ${this.getUnit("speed")}
-            </li>
-          `
-        : ""}
-          </ul>
-        </li>`;
+          ? html`
+              <li class="precipitation_probability">
+                ${Math.round(daily.precipitation_probability)}
+                ${this.getUnit("precipitation_probability")}
+              </li>
+            `
+          : ""}
+        ${daily.wind_speed !== undefined && daily.wind_speed !== null
+          ? html`
+              <li class="wind_speed">
+                ${Math.round(daily.wind_speed)} ${this.getUnit("speed")}
+              </li>
+            `
+          : ""}
+      </ul>
+    </li>`;
   }
 
   isDailyForecast(forecast) {
-    const diff = new Date(forecast[1].datetime) - new Date(forecast[0].datetime);
+    const diff =
+      new Date(forecast[1].datetime) - new Date(forecast[0].datetime);
     return diff > 3600000;
+  }
+
+  isNightTime(datetimehourly) {
+    const sun = this.hass.states["sun.sun"];
+    if (!sun) {
+      return false;
+    }
+
+    let nextrising = new Date(sun.attributes.next_rising);
+    let nextsetting = new Date(sun.attributes.next_setting);
+
+    const thistime = datetimehourly ? new Date(datetimehourly) : new Date();
+
+    return (
+      (thistime > nextsetting && thistime < nextrising) ||
+      (thistime < nextsetting &&
+        thistime < nextrising &&
+        nextrising < nextsetting)
+    );
   }
 
   getOneHourForecast(rainForecastEntity) {
@@ -500,10 +577,18 @@ class MeteofranceWeatherCard extends LitElement {
   }
 
   getOneHourForecastTime(rainForecastEntity) {
-    let rainForecastTimeRef = new Date(rainForecastEntity.attributes["forecast_time_ref"]);
-    let rainForecastStartTime = rainForecastTimeRef.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    let rainForecastTimeRef = new Date(
+      rainForecastEntity.attributes["forecast_time_ref"]
+    );
+    let rainForecastStartTime = rainForecastTimeRef.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
     rainForecastTimeRef.setHours(rainForecastTimeRef.getHours() + 1);
-    let rainForecastEndTime = rainForecastTimeRef.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    let rainForecastEndTime = rainForecastTimeRef.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
     return [rainForecastStartTime, rainForecastEndTime];
   }
@@ -513,89 +598,137 @@ class MeteofranceWeatherCard extends LitElement {
       rainForecastEntity.attributes["1_hour_forecast"]
     )) {
       if (time != undefined && rainForecastValues.get(value) > 0.1) {
-	let timeStr = time.replace(/([345])5/g, "$10");
-        return value + ((time == "0 min") ? " actuellement." : " dans " + timeStr + ".");
+        let timeStr = time.replace(/([345])5/g, "$10");
+        return (
+          value +
+          (time == "0 min" ? " actuellement." : " dans " + timeStr + ".")
+        );
       }
     }
 
-    return "Pas de pluie dans l'heure."
+    return "Pas de pluie dans l'heure.";
   }
 
   getAlertForecast(alertEntity) {
-    let phenomenaList = [ ]
+    let phenomenaList = [];
 
     if (alertEntity == undefined) {
       return [];
     }
 
-    if(!this._config.hide_alertVentViolent && alertEntity.attributes['Vent violent']) {
-       phenomenaList.push({ name: 'Vent violent', icon: 'mdi:weather-windy', color: alertEntity.attributes['Vent violent'] });
+    if (
+      !this._config.hide_alertVentViolent &&
+      alertEntity.attributes["Vent violent"]
+    ) {
+      phenomenaList.push({
+        name: "Vent violent",
+        icon: "mdi:weather-windy",
+        color: alertEntity.attributes["Vent violent"],
+      });
     }
 
-    if(!this._config.hide_alertPluieInondation && alertEntity.attributes['Pluie-inondation']) {
-       phenomenaList.push({ name: 'Pluie-inondation', icon: 'mdi:weather-pouring', color: alertEntity.attributes['Pluie-inondation'] });
+    if (
+      !this._config.hide_alertPluieInondation &&
+      alertEntity.attributes["Pluie-inondation"]
+    ) {
+      phenomenaList.push({
+        name: "Pluie-inondation",
+        icon: "mdi:weather-pouring",
+        color: alertEntity.attributes["Pluie-inondation"],
+      });
     }
 
-    if(!this._config.hide_alertOrages && alertEntity.attributes['Orages']) {
-       phenomenaList.push({ name: 'Orages', icon: 'mdi:weather-lightning', color: alertEntity.attributes['Orages'] });
+    if (!this._config.hide_alertOrages && alertEntity.attributes["Orages"]) {
+      phenomenaList.push({
+        name: "Orages",
+        icon: "mdi:weather-lightning",
+        color: alertEntity.attributes["Orages"],
+      });
     }
 
-    if(!this._config.hide_alertInondation && alertEntity.attributes['Inondation']) {
-       phenomenaList.push({ name: 'Inondation', icon: 'mdi:home-flood', color: alertEntity.attributes['Inondation'] });
+    if (
+      !this._config.hide_alertInondation &&
+      alertEntity.attributes["Inondation"]
+    ) {
+      phenomenaList.push({
+        name: "Inondation",
+        icon: "mdi:home-flood",
+        color: alertEntity.attributes["Inondation"],
+      });
     }
 
-    if(!this._config.hide_alertNeigeVerglas && alertEntity.attributes['Neige-verglas']) {
-       phenomenaList.push({ name: 'Neige-verglas', icon: 'mdi:weather-snowy-heavy', color: alertEntity.attributes['Neige-verglas'] });
+    if (
+      !this._config.hide_alertNeigeVerglas &&
+      alertEntity.attributes["Neige-verglas"]
+    ) {
+      phenomenaList.push({
+        name: "Neige-verglas",
+        icon: "mdi:weather-snowy-heavy",
+        color: alertEntity.attributes["Neige-verglas"],
+      });
     }
 
-    if(!this._config.hide_alertCanicule && alertEntity.attributes['Canicule']) {
-       phenomenaList.push({ name: 'Canicule', icon: 'mdi:weather-sunny-alert', color: alertEntity.attributes['Canicule'] });
+    if (
+      !this._config.hide_alertCanicule &&
+      alertEntity.attributes["Canicule"]
+    ) {
+      phenomenaList.push({
+        name: "Canicule",
+        icon: "mdi:weather-sunny-alert",
+        color: alertEntity.attributes["Canicule"],
+      });
     }
 
-    if(!this._config.hide_alertGrandFroid && alertEntity.attributes['Grand-froid']) {
-       phenomenaList.push({ name: 'Grand-froid', icon: 'mdi:snowflake', color: alertEntity.attributes['Grand-froid'] });
+    if (
+      !this._config.hide_alertGrandFroid &&
+      alertEntity.attributes["Grand-froid"]
+    ) {
+      phenomenaList.push({
+        name: "Grand-froid",
+        icon: "mdi:snowflake",
+        color: alertEntity.attributes["Grand-froid"],
+      });
     }
 
-    if(!this._config.hide_alertAvalanches && alertEntity.attributes['Avalanches']) {
-       phenomenaList.push({ name: 'Avalanches', icon: 'mdi:image-filter-hdr', color: alertEntity.attributes['Avalanches'] });
+    if (
+      !this._config.hide_alertAvalanches &&
+      alertEntity.attributes["Avalanches"]
+    ) {
+      phenomenaList.push({
+        name: "Avalanches",
+        icon: "mdi:image-filter-hdr",
+        color: alertEntity.attributes["Avalanches"],
+      });
     }
 
-    if(!this._config.hide_alertVaguesSubmersion && alertEntity.attributes['Vagues-submersion']) {
-       phenomenaList.push({ name: 'Vagues-submersion', icon: 'mdi:waves', color: alertEntity.attributes['Vagues-submersion'] });
+    if (
+      !this._config.hide_alertVaguesSubmersion &&
+      alertEntity.attributes["Vagues-submersion"]
+    ) {
+      phenomenaList.push({
+        name: "Vagues-submersion",
+        icon: "mdi:waves",
+        color: alertEntity.attributes["Vagues-submersion"],
+      });
     }
 
     return phenomenaList;
   }
 
   getWeatherIcon(condition, isNight) {
-    return `${this._config.icons
-      ? this._config.icons
-      : "/local/community/lovelace-meteofrance-weather-card/icons/"
-      }${isNight
-        ? weatherIconsNight[condition]
-        : weatherIconsDay[condition]
-      }.svg`;
+    return `${
+      this._config.icons
+        ? this._config.icons
+        : "/local/community/lovelace-meteofrance-weather-card/icons/"
+    }${
+      isNight ? weatherIconsNight[condition] : weatherIconsDay[condition]
+    }.svg`;
   }
 
-  isNightTime(isDaily, datetimehourly) {
-    const sun = this.hass.states["sun.sun"];
-    if (!sun || isDaily ) { return false}
-
-    let nextrising = new Date(sun.attributes.next_rising);
-    let nextsetting = new Date(sun.attributes.next_setting);
-
-    const thistime = datetimehourly ? new Date(datetimehourly) : new Date()
-	
-	return ((thistime > nextsetting && thistime < nextrising) || (thistime < nextsetting && thistime < nextrising && nextrising < nextsetting))
-  }
-  
-
-
-  getPhenomenaText(phenomena, sun) {
-    return `${sun && sun.state == "below_horizon"
-      ? phenomenaNightText[phenomena]
-      : phenomenaText[phenomena]
-      }`;
+  getPhenomenaText(phenomena, isNight) {
+    return `${
+      isNight ? phenomenaNightText[phenomena] : phenomenaText[phenomena]
+    }`;
   }
 
   getUnit(measure) {
@@ -675,7 +808,7 @@ class MeteofranceWeatherCard extends LitElement {
         margin-right: 10px;
       }
 
-      .current > *:last-child  {
+      .current > *:last-child {
         margin-left: auto;
         min-width: max-content;
         text-align: right;
@@ -731,7 +864,8 @@ class MeteofranceWeatherCard extends LitElement {
 
       .oneHour > li {
         background-color: var(--paper-item-icon-color);
-        border-right: 1px solid var(--lovelace-background, var(--primary-background-color));
+        border-right: 1px solid
+          var(--lovelace-background, var(--primary-background-color));
       }
 
       .oneHour > li:first-child {
@@ -746,11 +880,18 @@ class MeteofranceWeatherCard extends LitElement {
       }
 
       /* One Hour Labels */
-      .rain-0min, .rain-5min, .rain-10min, .rain-15min, .rain-20min, .rain-25min {
+      .rain-0min,
+      .rain-5min,
+      .rain-10min,
+      .rain-15min,
+      .rain-20min,
+      .rain-25min {
         flex: 1 1 0;
       }
 
-      .rain-35min, .rain-45min, .rain-55min {
+      .rain-35min,
+      .rain-45min,
+      .rain-55min {
         flex: 2 1 0;
       }
 
@@ -833,7 +974,8 @@ class MeteofranceWeatherCard extends LitElement {
         width: 50px;
         height: 50px;
         margin-right: 5px;
-      }`;
+      }
+    `;
   }
 }
 customElements.define("meteofrance-weather-card", MeteofranceWeatherCard);
