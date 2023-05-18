@@ -313,10 +313,10 @@ class WeatherCard extends LitElement {
                   : ""}
 
                   <div class="wind">
-                      <span class="wind-direction-arrow" style="transform: rotate(${parseInt(daily.wind_bearing) + 180}deg)">
-                          <ha-icon icon="mdi:arrow-up-thin"></ha-icon>
+                      <span class="wind-direction-arrow" style="transform: rotate(${daily.wind_bearing}deg)">
+                          <ha-icon icon="mdi:arrow-down-thin"></ha-icon>
                       </span>
-                      ${daily.wind_speed}<span class="unit">
+                      ${Math.round(daily.wind_speed)}<span class="unit">
                         ${this.getUnit("length")}/h
                       </span>
                   </div>
