@@ -311,6 +311,16 @@ class WeatherCard extends LitElement {
                       </div>
                     `
                   : ""}
+
+                  <div class="wind">
+                      <span class="wind-direction-arrow" style="transform: rotate(${parseInt(daily.wind_bearing) + 180}deg)">
+                          <ha-icon icon="mdi:arrow-up-thin"></ha-icon>
+                      </span>
+                      ${daily.wind_speed}<span class="unit">
+                        ${this.getUnit("length")}/h
+                      </span>
+                  </div>
+
               </div>
             `
           )}
@@ -493,7 +503,7 @@ class WeatherCard extends LitElement {
         color: var(--secondary-text-color);
       }
 
-      .precipitation {
+      .wind, .precipitation {
         color: var(--primary-text-color);
         font-weight: 300;
       }
@@ -528,6 +538,10 @@ class WeatherCard extends LitElement {
         left: 6em;
         word-wrap: break-word;
         width: 30%;
+      }
+
+      .wind-direction-arrow {
+        display: inline-block;
       }
     `;
   }
