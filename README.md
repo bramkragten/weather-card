@@ -12,12 +12,6 @@ Thanks for all picking this card up.
 
 You have 2 options, hosted or self hosted (manual). The first option needs internet and will update itself.
 
-### If you are using Firefox:
-
-Firefox < 66 does not support all the needed functions yet for the editor.
-You change this by enabling `javascript.options.dynamicImport` in `about:config`.
-Or use the version without the editor: [Version without editor](https://raw.githubusercontent.com/bramkragten/custom-ui/58c41ad177b002e149497629a26ea10ccfeebcd0/weather-card/weather-card.js)
-
 # Hosted:
 
 Add the following to resources in your lovelace config:
