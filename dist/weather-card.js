@@ -115,14 +115,22 @@ class WeatherCard extends LitElement {
           name: "name",
           selector: { text: {} },
         },
-        { name: "current", selector: { boolean: {} } },
-        { name: "details", selector: { boolean: {} } },
-        { name: "forecast", selector: { boolean: {} } },
+        { name: "current", default: true, selector: { boolean: {} } },
+        { name: "details", default: true, selector: { boolean: {} } },
+        { name: "forecast", default: true, selector: { boolean: {} } },
         {
           name: "forecast_type",
-          selector: { select: { options: ["hourly", "daily"] } },
+          default: "daily",
+          selector: {
+            select: {
+              options: [
+                { value: "hourly", label: "Hourly" },
+                { value: "daily", label: "Daily" },
+              ],
+            },
+          },
         },
-        { name: "number_of_forecasts", selector: { number: {} } },
+        { name: "number_of_forecasts", default: 5, selector: { number: {} } },
       ],
     };
   }
