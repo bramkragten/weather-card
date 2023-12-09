@@ -1,4 +1,6 @@
-const LitElement = customElements.get("ha-panel-lovelace") ? Object.getPrototypeOf(customElements.get("ha-panel-lovelace")) : Object.getPrototypeOf(customElements.get("hc-lovelace"));
+const LitElement = customElements.get("ha-panel-lovelace")
+  ? Object.getPrototypeOf(customElements.get("ha-panel-lovelace"))
+  : Object.getPrototypeOf(customElements.get("hc-lovelace"));
 const html = LitElement.prototype.html;
 const css = LitElement.prototype.css;
 
@@ -96,9 +98,24 @@ class WeatherCard extends LitElement {
     };
   }
 
-  static async getConfigElement() {
-    await import("./weather-card-editor.js");
-    return document.createElement("weather-card-editor");
+  static getConfigForm() {
+    return {
+      schema: [
+        {
+          name: "entity",
+          required: true,
+          selector: { entity: { domain: "weather" } },
+        },
+        {
+          name: "name",
+          selector: { text: {} },
+        },
+        { name: "current", selector: { boolean: {} } },
+        { name: "details", selector: { boolean: {} } },
+        { name: "forecast", selector: { boolean: {} } },
+        { name: "hourly_forecast", selector: { boolean: {} } },
+      ],
+    };
   }
 
   static getStubConfig(hass, unusedEntities, allEntities) {
@@ -150,7 +167,9 @@ class WeatherCard extends LitElement {
     return html`
       <ha-card @click="${this._handleClick}">
         ${this._config.current !== false ? this.renderCurrent(stateObj) : ""}
-        ${this._config.details !== false ? this.renderDetails(stateObj, lang) : ""}
+        ${this._config.details !== false
+          ? this.renderDetails(stateObj, lang)
+          : ""}
         ${this._config.forecast !== false
           ? this.renderForecast(stateObj.attributes.forecast, lang)
           : ""}
@@ -190,14 +209,20 @@ class WeatherCard extends LitElement {
     let next_setting;
 
     if (sun) {
-      next_rising = new Date(sun.attributes.next_rising).toLocaleTimeString(lang, {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    });
-      next_setting = new Date(sun.attributes.next_setting).toLocaleTimeString(lang, {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    });
+      next_rising = new Date(sun.attributes.next_rising).toLocaleTimeString(
+        lang,
+        {
+          hour: "2-digit",
+          minute: "2-digit",
+        }
+      );
+      next_setting = new Date(sun.attributes.next_setting).toLocaleTimeString(
+        lang,
+        {
+          hour: "2-digit",
+          minute: "2-digit",
+        }
+      );
     }
 
     this.numberElements++;
@@ -219,15 +244,11 @@ class WeatherCard extends LitElement {
         <li>
           <ha-icon icon="mdi:gauge"></ha-icon>
           ${stateObj.attributes.pressure}
-          <span class="unit">
-            ${this.getUnit("air_pressure")}
-          </span>
+          <span class="unit"> ${this.getUnit("air_pressure")} </span>
         </li>
         <li>
           <ha-icon icon="mdi:weather-fog"></ha-icon> ${stateObj.attributes
-            .visibility}<span class="unit">
-            ${this.getUnit("length")}
-          </span>
+            .visibility}<span class="unit"> ${this.getUnit("length")} </span>
         </li>
         ${next_rising
           ? html`
@@ -298,7 +319,8 @@ class WeatherCard extends LitElement {
                 daily.precipitation !== null
                   ? html`
                       <div class="precipitation">
-                        ${Math.round(daily.precipitation*10)/10} ${this.getUnit("precipitation")}
+                        ${Math.round(daily.precipitation * 10) / 10}
+                        ${this.getUnit("precipitation")}
                       </div>
                     `
                   : ""}
@@ -307,7 +329,8 @@ class WeatherCard extends LitElement {
                 daily.precipitation_probability !== null
                   ? html`
                       <div class="precipitation_probability">
-                        ${Math.round(daily.precipitation_probability)} ${this.getUnit("precipitation_probability")}
+                        ${Math.round(daily.precipitation_probability)}
+                        ${this.getUnit("precipitation_probability")}
                       </div>
                     `
                   : ""}
