@@ -317,7 +317,7 @@ class WeatherCard extends LitElement {
           ${stateObj.attributes.humidity}<span class="unit"> % </span>
         </li>
         <li>
-          <ha-icon icon="mdi:weather-windy"></ha-icon> ${windDirections[
+          <ha-icon icon="mdi:weather-windy"></ha-icon> ${/^[NSEW]*$/g.test(stateObj.attributes.wind_bearing) ?  stateObj.attributes.wind_bearing : windDirections[
             parseInt((stateObj.attributes.wind_bearing + 11.25) / 22.5)
           ]}
           ${stateObj.attributes.wind_speed}<span class="unit">
