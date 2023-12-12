@@ -69,6 +69,7 @@ details: false
 forecast: true
 hourly_forecast: false
 number_of_forecasts: 5
+hide_precipitation_probability: true
 ```
 
 If you want to show the sunrise and sunset times, make sure the `sun` component is enabled:
